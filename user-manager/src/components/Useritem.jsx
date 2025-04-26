@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 const CardDiv = styled.div`
-    width: 300px;
     height: 100px;
     display: flex;
+    margin: 10px;
 
-    border: 1px solid gray;
+    border: 1px solid #c5c5c5;
     background-color: white;
     border-radius: 8px;
+
 
 `
 const Img = styled.img`

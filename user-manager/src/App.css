@@ -15,6 +15,7 @@ body{
   font-family: "Noto Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  background-color: #e7e7ee;
 }
 
 .logo {
@@ -47,8 +48,8 @@ body{
 
 .card {
   padding: 2em;
+  
 }
 
-.read-the-docs {
-  color: #888;
-}
+
+
