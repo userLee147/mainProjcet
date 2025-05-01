@@ -1,7 +1,26 @@
 {
   "usersDB": [
-    { "id": "user1", "pwd": "user1", "log": false },
-    { "id": "user2", "pwd": "user2", "log": false },
-    { "id": "user3", "pwd": "user3", "log": false }
+    {
+      "id": "user1",
+      "pwd": "user1",
+      "log": false
+    },
+    {
+      "id": "user2",
+      "pwd": "user2",
+      "log": false
+    },
+    {
+      "id": "user3",
+      "pwd": "user3",
+      "log": false
+    },
+    {
+      "id": "user4",
+      "pwd": "user4",
+      "email": "user4@gmail.com",
+      "age": 15,
+      "name": "user4"
+    }
   ]
 }

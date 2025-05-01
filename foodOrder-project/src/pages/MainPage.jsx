@@ -4,8 +4,11 @@ import { FaRegUserCircle } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import useUserStore from '../store/UserStore';
 
 const MainPage = () => {
+  const { currentUser, login, logout } = useUserStore();
+  console.log(currentUser)
   return (
     <div>
       <header>
