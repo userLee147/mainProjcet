@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import UserDetail from './UserDetail';
 import Useritem from '../components/Useritem';
-import { useUser } from '../components/context/UserContext';
 import { ThemeContext } from '../components/context/ThemeContext';
+import UserStore from '../store/UserStore';
 
 const Wrap = styled.div`
     width: 500px;
@@ -111,8 +110,7 @@ const CardList = styled.div`
 
 
 const UserList = () => {
-  const { users } = useUser();
-  const { userInfo, setUserInfo } = useState();
+  const {users} = UserStore();
   const { isDark, setIsDark } = useContext(ThemeContext);
 
   const navigate = useNavigate();

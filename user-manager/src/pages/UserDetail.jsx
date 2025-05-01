@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useUser } from '../components/context/UserContext';
 import styled from 'styled-components';
+import UserStore from '../store/UserStore';
 
 const Wrap = styled.div`
   width: 300px;
@@ -30,7 +31,7 @@ const ItemBox = styled.div`
 `;
 
 
-const Img =styled.img`
+const Img = styled.img`
  width: 150px;
  height: 150px;
  margin: 10px;
@@ -48,14 +49,14 @@ align-items: center;
 text-align: cneter;
    background-color: white;
 `
-const ItemTr =styled.tr`
-
+const ItemTr = styled.tr`
+  font-weight: bold;
 `
-const ItemTd =styled.td`
+const ItemTd = styled.td`
  width: 50px;
  padding: 10px;
 `
-const ItemTH =styled.th`
+const ItemTH = styled.th`
  width: 50px;
 
 
@@ -80,10 +81,13 @@ font-size: 15px;
 
 
 const UserDetail = () => {
+  const { users, deleteUser, getUserById } = UserStore();
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getUserById, deleteUser } = useUser();
+
+  // user = 객체
   const user = getUserById(parseInt(id));
+
 
   const handleDelete = () => {
     if (window.confirm('정말로 이 사용자를 삭제하시겠습니까?')) {
@@ -103,23 +107,25 @@ const UserDetail = () => {
       </ItemBox>
       <ItemDiv>
         <ItemTable>
-        <ItemTr>
-            <ItemTH>이 름</ItemTH>
-            <ItemTd>{user.name}</ItemTd>
-        </ItemTr>
-        <ItemTr>
-            <ItemTH>나 이</ItemTH>
-            <ItemTd>{user.age}</ItemTd>
-        </ItemTr>
-        <ItemTr>
-            <ItemTH>부 서</ItemTH>
-            <ItemTd>{user.department}</ItemTd>
-        </ItemTr>
+          <tbody>
+            <ItemTr>
+              <ItemTH>이 름</ItemTH>
+              <ItemTd>{user.name}</ItemTd>
+            </ItemTr>
+            <ItemTr>
+              <ItemTH>나 이</ItemTH>
+              <ItemTd>{user.age}</ItemTd>
+            </ItemTr>
+            <ItemTr>
+              <ItemTH>부 서</ItemTH>
+              <ItemTd>{user.department}</ItemTd>
+            </ItemTr>
+          </tbody>
         </ItemTable>
       </ItemDiv>
       <ItemDiv2>
-      <Btn onClick={() => navigate('/')}>뒤로가기</Btn>
-      <Btn onClick={handleDelete}>삭제하기</Btn>
+        <Btn onClick={() => navigate('/')}>뒤로가기</Btn>
+        <Btn onClick={handleDelete}>삭제하기</Btn>
       </ItemDiv2>
 
     </Wrap>

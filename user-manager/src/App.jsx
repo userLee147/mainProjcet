@@ -14,7 +14,7 @@ function App() {
   return (
     <>
     
-      <UserProvider>
+      
       <ThemeContext.Provider value={{isDark, setIsDark}}>
         <BrowserRouter>
           <Routes>
@@ -25,7 +25,7 @@ function App() {
           </Routes>
           </BrowserRouter>
         </ThemeContext.Provider>
-    </UserProvider>
+  
 
 
 

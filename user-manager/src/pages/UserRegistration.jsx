@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../components/context/UserContext';
 import styled from 'styled-components';
+import UserStore from '../store/UserStore';
 
 const Wrap = styled.div`
   width: 300px;
@@ -56,7 +57,8 @@ height: 50px;
 margin: 10px;
 `;
 const UserRegistration = () => {
-  const { users, setUsers } = useUser();
+  const {addUser} = UserStore();
+  // const { users, setUsers } = useUser();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -67,19 +69,19 @@ const UserRegistration = () => {
   });
 
   const handleSubmit = (e) => {
+    
     e.preventDefault();
-    const newId = users.length + 1;
+    addUser(formData) 
+    // const newId = users.length + 1;
 
-    setUsers([
-      ...users,
-      {
-        id: newId,
-        name: formData.name.trim(),
-        department: formData.department,
-        age: parseInt(formData.age),
-        isOnline: formData.isOnline,
-      },
-    ]);
+    // setUsers(
+    //   [...users,{
+    //     id: newId,
+    //     name: formData.name.trim(),
+    //     department: formData.department,
+    //     age: parseInt(formData.age),
+    //     isOnline: formData.isOnline,
+    //   }]);
     navigate('/');
   };
 
