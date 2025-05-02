@@ -1,10 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as yup from 'yup';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import useUserStore from '../store/UserStore';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -23,6 +24,8 @@ const UserRegistration = () => {
   const { addUser } = useUserStore();
   // 아이디 중복검사 -> false 사용 불가 /  true  사용가능
   const [idValidation, setIdValidation] = useState(false);
+  const [isSame, setisSame] =useState(false);
+  const newPwd = useRef();
 
   const {
     // 폼 객체에는 get과 set이 존재함 value={id} 이렇게 넣지말고 form 데이터에 있는 걸로 활용하자
@@ -35,10 +38,21 @@ const UserRegistration = () => {
     resolver: yupResolver(schema),
   });
 
+  const navigator = useNavigate()
+  const checkPwd = () => {
+
+    if(getValues('pwd') === newPwd.current.value){
+        setisSame(true)
+        alert('비밀번호가 일치합니다.')
+    }else{
+      setisSame(false)
+      alert('비밀번호 일치하지 않습니다.')
+      
+    }
+  }
+
   const idCheck = async () => {
     const inputId = getValues('id')
-
-
     try {
       const res = await axios.get(`http://localhost:3001/usersDB?id=${inputId}`);
       if (res.data.length > 0) {
@@ -55,20 +69,21 @@ const UserRegistration = () => {
       setIdValidation(false);
     }
   };
-
-  useEffect(() => {
-    console.log("중복검사 상태:", idValidation);
-  }, [idValidation]);
+  
+  // useEffect(() => {
+  //   console.log("id 상태:", idValidation);
+  // }, [idValidation]);
 
 
   const onSumbit = (data) => {
-    console.log(data)
-    addUser(data)
-    alert(`입력성공! 이름 : ${data.name}  이메일 : ${data.email}`);
+    addUser({...data, log : false })
+    alert('회원가입성공 로그인해주세요!')
+    navigator('/')
   };
 
   return (
-    <FormWrapper onSubmit={handleSubmit(onSumbit)}>
+    <>
+        <FormWrapper onSubmit={handleSubmit(onSumbit)}>
       <label>ID</label>
       <input type="text" {...register('id')} />
       <button type="button" onClick={idCheck}>중복확인</button>
@@ -76,8 +91,12 @@ const UserRegistration = () => {
       {errors.id && <ErrorText>{errors.id.message}</ErrorText>}
       
       <label>password</label>
-      <input type="text" {...register('pwd')} />
+      <input type="password" {...register('pwd')} />
       {errors.pwd && <ErrorText>{errors.pwd.message}</ErrorText>}
+
+      <label htmlFor="">passwordCheck</label>
+      <input type="text" ref={newPwd} />
+      <button type="button" onClick={checkPwd}>비밀번호확인</button>
 
       <label>이름</label>
       <input type="text" {...register('name')} />
@@ -91,10 +110,15 @@ const UserRegistration = () => {
       <input type="email" {...register('email')} />
       {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
 
-       { idValidation? <button type="button"> 회원가입</button> : ''}
-
-
+       
+       {idValidation && isSame ? 
+       <button type="submit"> 회원가입</button> 
+       : <p>중복체크 및 비밀번호를 확인하면 회원가입 버튼이 생깁니다</p>}
     </FormWrapper>
+
+  
+    </>
+
   );
 };
 

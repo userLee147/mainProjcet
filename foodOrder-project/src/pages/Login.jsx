@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import useUserStore from '../store/UserStore';
 import { CommonBtn } from '../styled/common';
 import { Link } from 'react-router-dom';
@@ -13,6 +13,11 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if( id.trim() === '' || pwd.trim() === ''){
+      return
+    }
+
     try{
         await login(id, pwd);
         navigate('/')
@@ -28,10 +33,10 @@ const Login = () => {
     navigate('/')
   };
   
-  
-  useEffect(() => {
-    console.log("유저 상태 변화:", currentUser);
-  }, [currentUser]);
+
+  // useEffect(() => {
+  //   console.log("유저 상태 변화:", currentUser);
+  // }, [currentUser]);
 
   return (
     <div className="login-container">

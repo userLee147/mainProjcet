@@ -7,14 +7,7 @@ const useUserStore = create((set, get) => ({
   loading: false,
   error: null,
   
-  getUsers: async () => {
-    try {
-      const response = await axios.get('/usersDB');
-      set({ users: response.data });
-    } catch (error) {
-      set({ users: error.message });
-    }
-  },
+
 
   login: async (id, pwd) => {
     try {
