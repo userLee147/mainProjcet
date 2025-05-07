@@ -10,6 +10,7 @@ const useUserStore = create((set, get) => ({
 
 
   login: async (id, pwd) => {
+    
     try {
       const response = await axios.get('http://localhost:3001/usersDB', {
         params: { id, pwd },
@@ -47,6 +48,22 @@ const useUserStore = create((set, get) => ({
   
     await axios.post(`http://localhost:3001/usersDB/`,data)
     .then((res) =>  res )
+    .catch((error) => error)
+  },
+
+  updateUser: async (id, updateUser) => {
+    set({ loading: true, error: null });
+    try {
+     await axios.patch(`http://localhost:3001/usersDB/${id}`,{...updateUser, log : false} );
+  
+    } catch (error) {
+      set({error :null})
+    }
+  },
+
+  removeUser: async (id) => {
+      await axios.delete(`http://localhost:3001/usersDB/${id}`)
+      .then((res) =>  res )
     .catch((error) => error)
   }
 }));

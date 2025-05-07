@@ -1,88 +1,141 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useUserStore from '../store/UserStore';
 import Header from '../components/Header';
 import SearchContent from '../components/SearchContent';
-import useMenuStore from '../store/MenuStore';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
+import { NavDiv, NavButton, Wrap } from '../styled/common';
+
+import { FaStore } from 'react-icons/fa';
+import { PiForkKnife } from 'react-icons/pi';
+import { PiMegaphoneBold } from 'react-icons/pi';
+import { LuSandwich } from 'react-icons/lu';
+import { IoArrowForwardCircleOutline } from 'react-icons/io5';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+// import required modules
+import { Autoplay, Pagination } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import '../css/styles.css';
 
 const MainPage = () => {
   const { currentUser } = useUserStore();
-  const { menuList, getMenuList } = useMenuStore();
-  const nevigate = useNavigate()
+  const navigator = useNavigate();
 
-  useEffect(() => {
-    const fetchMenu = async () => {
-      await getMenuList();
-    };
-    fetchMenu();
-  }, []);
+  const checkUser = () => {
+    const someData = currentUser;
+    if (currentUser?.id) {
+      navigator('/order', { state: someData });
+    } else {
+      alert('로그인 후 이용가능합니다.');
+    }
+  };
 
   return (
     <Wrap>
       <Header currentUser={currentUser}> </Header>
-
       <SearchContent> </SearchContent>
+      <SwiperContainer>
+        <Swiper
+          loop={true}
+          centeredSlides={true}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: true,
+          }}
+          pagination={{
+            dynamicBullets: true,
+          }}
+          modules={[Pagination, Autoplay]}
+          className="main-swiper"
+        >
+          <SwiperSlide>도시락 세트 할인중 </SwiperSlide>
+          <SwiperSlide>광고배너 준비중</SwiperSlide>
+          <SwiperSlide>광고배너 준비중</SwiperSlide>
+        </Swiper>
+      </SwiperContainer>
 
-      <NoticeCard>
-        <Text>광고배너 준비중입니다.</Text>
-      </NoticeCard>
+      <NavDiv>
+        <NavButton onClick={() => navigator('/menu', { state: currentUser })}>
+          <PiForkKnife color="black" size={30}></PiForkKnife>
+          메뉴정보
+        </NavButton>
 
-      <section>
-        <p>메뉴정보</p>
-        {menuList.map((item) => 
-              <CardWrapper onClick={() => nevigate(`/detail/${item.id}`)}>
-              <Image src={item.img} alt={item.name} />
-              <TextOverlay>
-                <Title>{item.name}</Title>
-                <Description>{item.description}</Description>
-              </TextOverlay>
-            </CardWrapper>
-        )}
-      </section>
+        <NavButton onClick={checkUser}>
+          <FaStore color="black" size={30}></FaStore>
+          <p>단체주문</p>
+        </NavButton>
 
-      <nav>
-        {/* 여기는 버튼 컴포넌트 반복..? */}
-        <button></button>
-      </nav>
-      <footer></footer>
+        <NavButton>
+          <PiMegaphoneBold color="black" size={30}></PiMegaphoneBold>
+          <p>공지</p>
+        </NavButton>
+
+        <NavButton>
+          <LuSandwich color="black" size={30}></LuSandwich>
+          <p>준비중</p>
+        </NavButton>
+      </NavDiv>
+
+      <div>
+        <ContentTitle>TodaySand Orders</ContentTitle>
+        <CardWrapper>
+          <Image src="/public/img/교회샌드위치.PNG" />
+          <TextOverlay>
+            <div>
+              <Title>샌드위치set NO1</Title>
+              <Description>교회 행사도시락으로 보내드린 맛난 간식세트</Description>
+            </div>
+
+            <a href="https://blog.naver.com/todaysand_/223692018798">
+              <IoArrowForwardCircleOutline size={50} color="black"></IoArrowForwardCircleOutline>
+            </a>
+          </TextOverlay>
+        </CardWrapper>
+        <CardWrapper>
+          <Image src="/public/img/버스대절.jpg" />
+          <TextOverlay>
+            <div>
+              <Title>샌드위치set NO1</Title>
+              <Description>강남 결혼식 답례품으로 샌드위치세트 준비하세요</Description>
+            </div>
+
+            <a href="https://blog.naver.com/todaysand_/223658623296">
+            
+              <IoArrowForwardCircleOutline size={50} color="black"></IoArrowForwardCircleOutline>
+            </a>
+          </TextOverlay>
+        </CardWrapper>
+      </div>
     </Wrap>
   );
 };
 
 export default MainPage;
 
-const Wrap = styled.div`
-  width: 100%;
-`;
-
-const NoticeCard = styled.div`
-  width: 100%;
-  height: 150px;
+const SwiperContainer = styled.div`
   margin: 10px;
-  border: 1px solid black;
-  /* background-image: url('/public/img/다운로드.jpg');
-  background-position: center;
-  background-size: cover; */
-  border-radius: 10px;
-  position: relative;
+  justify-content: center;
+  align-items: center;
 `;
 
-const Text = styled.p`
-  color:black;
-  padding: auto;
+const ContentTitle = styled.p`
+  font-size: 24px;
+  font-weight: bold;
+  text-align: left;
+  color: black;
+  margin: 20px;
 `;
-
 
 const CardWrapper = styled.div`
   position: relative;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 10px;
 `;
 
 const Image = styled.img`
@@ -93,13 +146,26 @@ const Image = styled.img`
 `;
 
 const TextOverlay = styled.div`
-width: 100%;
-background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 150px;
+  display: flex;
+  align-items: end;
+  background: linear-gradient(to top, #ffffff 0%, rgba(255, 255, 255, 0) 90%);
   position: absolute;
-  bottom: 0;
-  
+  bottom: 0px;
+
   color: black;
   text-align: left;
+
+  a {
+    padding: 100px;
+    display: flex;
+    align-items: end;
+    padding: 10px;
+  }
 `;
 
 const Title = styled.h3`
@@ -112,5 +178,4 @@ const Description = styled.p`
   margin: 4px 0 20px 0;
   font-size: 16px;
   padding-left: 10px;
- 
 `;

@@ -1,8 +1,9 @@
 #root {
   width: 600px;
-  height: 100vh;
+  /* height: 100vh; */
   margin: 0 auto;
   text-align: center;
+  box-sizing: border-box;
 }
 
 *{
@@ -12,14 +13,21 @@
 }
 
 body{
+  width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  text-align: center;
   font-family: "Noto Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+button :hover {
+  border: none;
 }
 
+button :focus {
+  border: none;
+  background-color: aliceblue;
+}

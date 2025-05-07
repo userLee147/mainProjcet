@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import useUserStore from '../store/UserStore';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Wrap } from '../styled/common';
 
 
 
@@ -82,7 +83,7 @@ const UserRegistration = () => {
   };
 
   return (
-    <>
+    <Wrap>
         <FormWrapper onSubmit={handleSubmit(onSumbit)}>
       <label>ID</label>
       <input type="text" {...register('id')} />
@@ -117,7 +118,7 @@ const UserRegistration = () => {
     </FormWrapper>
 
   
-    </>
+    </Wrap>
 
   );
 };

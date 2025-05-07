@@ -1,9 +1,10 @@
 import React, {useState } from 'react';
 import useUserStore from '../store/UserStore';
-import { CommonBtn } from '../styled/common';
-import { Link } from 'react-router-dom';
+import { CommonBtn, Wrap,HeaderWrap } from '../styled/common';
+
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 
 const Login = () => {
   const [id, setId] = useState('');
@@ -27,11 +28,7 @@ const Login = () => {
 
   };
 
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    await logout(currentUser);
-    navigate('/')
-  };
+
   
 
   // useEffect(() => {
@@ -39,8 +36,9 @@ const Login = () => {
   // }, [currentUser]);
 
   return (
-    <div className="login-container">
-      <WrapFrom onSubmit={handleLogin}>
+    <Wrap>
+
+      <FormWrapper onSubmit={handleLogin}>
         <h1>로그인 화면</h1>
         <label htmlFor="id">아이디</label>
         <input type="text" id="id" value={id} onChange={(e) => setId(e.target.value)} />
@@ -49,19 +47,42 @@ const Login = () => {
         <input type="password" id="pwd" value={pwd} onChange={(e) => setPwd(e.target.value)} />
 
         <button type="submit">로그인</button>
-      </WrapFrom>
+      </FormWrapper>
+
       <div>
-        <CommonBtn to="/user">회원가입</CommonBtn>
-        <CommonBtn to="/">홈으로</CommonBtn>
-        <button onClick={handleLogout}>로그아웃</button>
+      <CommonBtn to="/user">회원가입</CommonBtn>
+      <CommonBtn to="/">홈으로</CommonBtn>
       </div>
-    </div>
+
+    </Wrap>
   );
 };
 
 export default Login;
 
-const WrapFrom = styled.form`
+
+
+const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  max-width: 600px;
+  margin: 0 auto;
+
+  input {
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+  }
+
+  button {
+    padding: 10px;
+    background:  #ff5100;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
 `;
+
