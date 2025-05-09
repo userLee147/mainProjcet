@@ -8,17 +8,16 @@ import SearchContent from '../components/SearchContent';
 
 import { NavDiv, NavButton, Wrap } from '../styled/common';
 
-import { FaStore } from 'react-icons/fa';
+//icon
+import { FaStore  } from 'react-icons/fa';
 import { PiForkKnife } from 'react-icons/pi';
 import { PiMegaphoneBold } from 'react-icons/pi';
 import { LuSandwich } from 'react-icons/lu';
 import { IoArrowForwardCircleOutline } from 'react-icons/io5';
 
+//swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
-// import required modules
 import { Autoplay, Pagination } from 'swiper/modules';
-
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import '../css/styles.css';
@@ -38,7 +37,7 @@ const MainPage = () => {
 
   return (
     <Wrap>
-      <Header currentUser={currentUser}> </Header>
+      <Header> </Header>
       <SearchContent> </SearchContent>
       <SwiperContainer>
         <Swiper
@@ -83,7 +82,7 @@ const MainPage = () => {
       </NavDiv>
 
       <div>
-        <ContentTitle>TodaySand Orders</ContentTitle>
+        <ContentTitle>오늘샌드 단체주문 예시</ContentTitle>
         <CardWrapper>
           <Image src="/public/img/교회샌드위치.PNG" />
           <TextOverlay>
@@ -124,7 +123,7 @@ const SwiperContainer = styled.div`
   align-items: center;
 `;
 
-const ContentTitle = styled.p`
+const ContentTitle= styled.p`
   font-size: 24px;
   font-weight: bold;
   text-align: left;

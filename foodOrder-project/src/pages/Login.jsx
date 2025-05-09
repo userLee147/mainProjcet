@@ -1,15 +1,15 @@
 import React, {useState } from 'react';
 import useUserStore from '../store/UserStore';
-import { CommonBtn, Wrap,HeaderWrap } from '../styled/common';
+import { CommonBtn, Wrap, ContentTitle } from '../styled/common';
 
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
+import { CiUser } from "react-icons/ci";
 
 const Login = () => {
   const [id, setId] = useState('');
   const [pwd, setPwd] = useState('');
-  const { currentUser, login, logout } = useUserStore();
+  const {login} = useUserStore();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -39,8 +39,9 @@ const Login = () => {
     <Wrap>
 
       <FormWrapper onSubmit={handleLogin}>
-        <h1>로그인 화면</h1>
+        <ContentTitle>로그인 화면</ContentTitle>
         <label htmlFor="id">아이디</label>
+        
         <input type="text" id="id" value={id} onChange={(e) => setId(e.target.value)} />
 
         <label htmlFor="pwd">패스워드</label>

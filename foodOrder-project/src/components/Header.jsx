@@ -6,9 +6,11 @@ import { IoMdLogIn } from 'react-icons/io';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
+import useUserStore from '../store/UserStore';
 
-const Header = ({currentUser}) => {
+const Header = () => {
   const navigator =useNavigate();
+  const {currentUser} = useUserStore();
   
   const handleClick = () => {
     const someData = currentUser ;

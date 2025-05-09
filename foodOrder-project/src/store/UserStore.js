@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import { TbCurrencyRupeeNepalese } from 'react-icons/tb';
 
 const useUserStore = create((set, get) => ({
   users: [],
@@ -51,20 +52,32 @@ const useUserStore = create((set, get) => ({
     .catch((error) => error)
   },
 
-  updateUser: async (id, updateUser) => {
-    set({ loading: true, error: null });
-    try {
-     await axios.patch(`http://localhost:3001/usersDB/${id}`,{...updateUser, log : false} );
-  
-    } catch (error) {
-      set({error :null})
+  updateUser: async (updateUser) => {   
+    
+    await axios.patch(`http://localhost:3001/usersDB/${updateUser.id}`,{...updateUser, log : false} )
+    .then((res) =>  res )
+    .catch((error) => error)
+
+  },
+
+  getUser : async (id) => {
+    try {    
+      const res = await axios.get(`http://localhost:3001/usersDB/${id}`);
+      set({currentUser : res.data})
+    }catch(error){
+      set({ currentUser: [], error: error.message });
     }
   },
 
   removeUser: async (id) => {
+    try{
       await axios.delete(`http://localhost:3001/usersDB/${id}`)
-      .then((res) =>  res )
-    .catch((error) => error)
+      set({currentUser : []})
+    }catch(error){
+      set({ currentUser: [], error: error.message });
+    }
+      
+
   }
 }));
 

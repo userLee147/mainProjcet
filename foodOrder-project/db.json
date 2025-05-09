@@ -30,7 +30,16 @@
       "email": "user4@gmail.com",
       "age": 15,
       "name": "user4",
-      "log": false
+      "log": true
+    },
+    {
+      "id": "user5",
+      "pwd": "user5",
+      "checkPwd": "user5",
+      "name": "user5",
+      "age": 50,
+      "email": "user5@gmail.com",
+      "log": true
     }
   ],
   "menuDB": [

@@ -24,6 +24,7 @@ export const CommonBtn = styled(Link)`
   }
 `;
 
+// 버튼에 링크가 있으면 네비게이터를 못씀으로 두가지 버전이 좋은 것 같음
 export const CommonBtn2 = styled.button`
   padding: 10px 40px;
   margin: 5px;
@@ -47,6 +48,17 @@ export const NonebackgroudBtn = styled.button`
     background-color: none;
   }
 `;
+
+// 로그인화면, 
+export const ContentTitle = styled.p`
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  color: black;
+  margin: 20px;
+`;
+
+
 
 export const SearchSection = styled.div`
   width: 100%;

@@ -3,9 +3,12 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useUserStore from '../store/UserStore';
 import { CommonBtn2 } from '../styled/common';
+import { useState } from 'react';
+import Modal from '../components/Modal';
+import CheckPwModal from '../components/CheckPwModal';
 
 // yup 스키마
 const schema = yup.object().shape({
@@ -19,16 +22,17 @@ const schema = yup.object().shape({
 });
 
 const UserEdit = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const currentUser = location.state;
-  const { logout } = useUserStore();
-  const { updateUser, removeUser } = useUserStore();
-
+  const { currentUser, updateUser } = useUserStore();
+  const [isEditing, setIsEditing] = useState(false); // 수정 상태 추가
+  const [isOnpen, setIsOpen] = useState(false);
+  const [isCheckOpen, setIsCheckOpen] =useState(false);
+  
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -38,40 +42,41 @@ const UserEdit = () => {
   useEffect(() => {
     if (!currentUser) {
       alert('로그인이 필요한 서비스입니다.');
-
       navigate('/');
+
     } else {
-      // 기본값 세팅
+      // 기본값 세팅 
       setValue('name', currentUser.name || '');
       setValue('age', currentUser.age || '');
       setValue('email', currentUser.email || '');
       setValue('pwd', currentUser.pwd || '');
     }
-  }, [currentUser, setValue, navigate]);
+  }, [currentUser, setValue]);
 
   const onSubmit = async (data) => {
     try {
-      await updateUser(currentUser.id, { ...currentUser, ...data });
-      alert('정보가 수정되었습니다! 다시로그인 해주세요');
-      await logout(currentUser);
-      navigate('/');
+      await updateUser({ ...currentUser, ...data });
+        alert('정보가 수정되었습니다.')
+        setIsEditing(!isEditing)
+
     } catch (error) {
       alert('정보 수정 중 오류가 발생했습니다.');
       console.error('업데이트 실패:', error);
     }
   };
-  const onRemove = async (id) => {
-    try {
-      await logout(currentUser);
-      await removeUser(id);
-      alert('회원탈퇴가 되었습니다.');
-     
-      navigate('/');
-    } catch (error) {
-      alert('정보 수정 중 오류가 발생했습니다.');
-      console.error('업데이트 실패:', error);
-    }
-  };
+
+
+
+  const cancelEdit = () =>{
+    reset({
+      name: currentUser.name ||'',
+      age :currentUser.age||'', 
+      email : currentUser.email||'',
+      pwd : currentUser.pwd||'' 
+    })
+    setIsEditing(false)
+  }
+
 
   return (
     <>
@@ -79,26 +84,49 @@ const UserEdit = () => {
         <h2>개인정보 수정</h2>
 
         <label>이름</label>
-        <input type="text" {...register('name')} />
+        <input type="text" {...register('name')} readOnly={!isEditing}/>
         {errors.name && <ErrorText>{errors.name.message}</ErrorText>}
 
         <label>나이</label>
-        <input type="number" {...register('age')} />
+        <input type="number" {...register('age')} readOnly={!isEditing}/>
         {errors.age && <ErrorText>{errors.age.message}</ErrorText>}
 
         <label>이메일</label>
-        <input type="email" {...register('email')} />
+        <input type="email" {...register('email')} readOnly={!isEditing} />
         {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
 
         <label>비밀번호</label>
-        <input type="password" {...register('pwd')} />
+        <input type="password" {...register('pwd')} readOnly/>
         {errors.pwd && <ErrorText>{errors.pwd.message}</ErrorText>}
+        
+        <button type='button' onClick={() => setIsCheckOpen(true)}>비밀번호 수정하기</button>
+
 
         <div>
-          <CommonBtn2 type="submit">수정하기</CommonBtn2>
-          <CommonBtn2 type='button' onClick={() => onRemove(currentUser.id)}>회원탈퇴</CommonBtn2>
+          {isEditing ? (
+            <>
+              <button type="submit">
+                수정 완료
+              </button>
+              <button type="button" onClick={cancelEdit}>
+                수정 취소
+              </button>
+            </>
+          ) : (
+            <button type="button" onClick={() => setIsEditing(!isEditing)}>
+              수정하기
+            </button>
+          )}
+          <CommonBtn2 type='button' onClick={() => setIsOpen(true)}>회원탈퇴</CommonBtn2>
         </div>
       </FormWrapper>
+      {
+        isOnpen &&<Modal setIsOpen={setIsOpen}></Modal> 
+      }
+              {
+          isCheckOpen&&<CheckPwModal setIsCheckOpen={setIsCheckOpen} ></CheckPwModal>
+        }
+        
     </>
   );
 };
@@ -115,8 +143,12 @@ const FormWrapper = styled.form`
 
   input {
     padding: 8px;
-    border: 1px solid #cccccc;
+    border: 1px solid #e9e9e9;
     border-radius: 4px;
+  }
+
+  input:read-only{
+    background-color: #e9e9e9;
   }
 
   button {

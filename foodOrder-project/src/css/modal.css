@@ -1,0 +1,43 @@
+.modalWrap{
+    width: 100%;
+    min-height: 100vh;
+    background:#fff7ebd2;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+
+    position: fixed;
+    margin: auto;
+    top: 0;
+ left: 0;
+
+}
+.modalLayOutBox{
+    position: absolute;
+    width: 200px;
+    border-radius: 8px;
+    background-color: white;
+    padding: 5px;
+    top: 30%;
+}
+.modalCloseDiv{
+    display: flex;
+    justify-content: end;
+   
+}
+.closeBtn{
+padding: 0px 10px;
+background-color: white;
+}
+.modalContent{
+padding: 5px 0px;
+
+    
+}
+.modalBtnBox{
+    padding: 5px 0px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+} 
+
