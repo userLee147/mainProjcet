@@ -31,9 +31,9 @@ public class MemberController {
 
     // 로그인 기능
     @PostMapping()
-    public ResponseEntity<MemberDto.Response> loginMember(@RequestBody MemberDto.Update LoginUser){
+    public ResponseEntity<MemberDto.Response> loginMember(@RequestBody MemberDto.Update loginUser){
 
-        return ResponseEntity.ok(memberService.loginMember(LoginUser));
+        return ResponseEntity.ok(memberService.loginMember(loginUser));
     }
 
     // 로그아웃
@@ -49,7 +49,7 @@ public class MemberController {
     }
 
     //회원가입
-    @PostMapping("/user")
+    @PostMapping("/addUser")
     public ResponseEntity<Long> registrationMember(@RequestBody MemberDto.Response userDto){
         return ResponseEntity.ok(memberService.registraitonMember(userDto));
     }

@@ -5,6 +5,7 @@ import com.kh.reactbackend.dto.MemberDto;
 import com.kh.reactbackend.entity.Member;
 import com.kh.reactbackend.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

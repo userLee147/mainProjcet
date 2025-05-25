@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,12 +25,16 @@ public class MemberRepositoryImpl implements MemberRepository{
 
     @Override
     public Optional<Member> loginUser(String userId, String userPwd) {
-        String query = "select m from Member m where m.userId = :userId and m.userPwd = :userPwd";
-        Member loginMember = em.createQuery(query, Member.class)
-                .setParameter("userId",userId)
-                .setParameter("userPwd",userPwd)
-                .getSingleResult();
-        return Optional.ofNullable(loginMember);
+        // getSingleResult()  같은 경우는 결과를 받지 못하면 바로 에러를 발생하기 때문에
+        // 일단 리스트로 받고 예외를 처리해야 한다. try catch로  return Optional.empty();
+        // 혹은 아래와 같이 처리
+            String query = "select m from Member m where m.userId = :userId and m.userPwd = :userPwd";
+            List<Member> loginMember = em.createQuery(query, Member.class)
+                    .setParameter("userId",userId)
+                    .setParameter("userPwd",userPwd)
+                    .getResultList();
+
+            return loginMember.stream().findFirst();
     }
 
 

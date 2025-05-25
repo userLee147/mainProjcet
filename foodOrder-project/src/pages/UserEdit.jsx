@@ -15,7 +15,7 @@ const schema = yup.object().shape({
   name: yup.string().required('이름을 입력하세요'),
   age: yup.number().typeError('숫자를 입력하세요').min(13, '13세 이하는 가입할 수 없습니다.'),
   email: yup.string().email('유효한 이메일 형식이 아닙니다.').required('이메일을 입력하세요'),
-  pwd: yup
+  userPwd: yup
     .string()
     .matches(/^(?=.*[a-zA-Z]).{5,}$/, '비밀번호는 영문자를 포함해 5자 이상이어야 합니다.')
     .required('비밀번호를 입력해주세요'),
@@ -49,9 +49,9 @@ const UserEdit = () => {
       setValue('name', currentUser.name || '');
       setValue('age', currentUser.age || '');
       setValue('email', currentUser.email || '');
-      setValue('pwd', currentUser.pwd || '');
+      setValue('userPwd', currentUser.userPwd || '');
     }
-  }, [currentUser, setValue]);
+  }, [currentUser, setValue, updateUser]);
 
   const onSubmit = async (data) => {
     try {
@@ -68,12 +68,17 @@ const UserEdit = () => {
 
 
   const cancelEdit = () =>{
-    reset({
-      name: currentUser.name ||'',
-      age :currentUser.age||'', 
-      email : currentUser.email||'',
-      pwd : currentUser.pwd||'' 
-    })
+    setValue('name', currentUser.name || '');
+    setValue('age', currentUser.age || '');
+    setValue('email', currentUser.email || '');
+    setValue('userPwd', currentUser.userPwd || '');
+    // reset({
+    //   name: currentUser.name ||'',
+    //   age :currentUser.age||'', 
+    //   email : currentUser.email||'',
+    //   userPwd : currentUser.userPwd||'' 
+    // })
+    // restet 이 맨처음 값으로 가져와서 사용  x
     setIsEditing(false)
   }
 
@@ -96,8 +101,8 @@ const UserEdit = () => {
         {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
 
         <label>비밀번호</label>
-        <input type="password" {...register('pwd')} readOnly/>
-        {errors.pwd && <ErrorText>{errors.pwd.message}</ErrorText>}
+        <input type="password" {...register('userPwd')} readOnly/>
+        {errors.userPwd && <ErrorText>{errors.userPwd.message}</ErrorText>}
         
         <button type='button' onClick={() => setIsCheckOpen(true)}>비밀번호 수정하기</button>
 

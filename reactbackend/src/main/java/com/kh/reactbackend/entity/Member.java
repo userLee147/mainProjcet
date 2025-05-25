@@ -18,13 +18,13 @@ public class Member {
     @Column(name= "code",  nullable = false)
     private Long code;
 
-    @Column(name= "USER_Id",  nullable = false)
+    @Column(name= "USER_Id", length = 100,  nullable = false)
     private String userId;
 
-    @Column(name= "NAME",  nullable = false)
+    @Column(name= "NAME", length = 100,  nullable = false)
     private String name;
 
-    @Column(name = "USER_PWD",  nullable = false)
+    @Column(name = "USER_PWD", length = 100,  nullable = false)
     private String userPwd;
 
     @Column(name ="CHECK_PWD", length = 100, nullable = false)
@@ -40,7 +40,6 @@ public class Member {
     public void updateLogin(Boolean login) {
         this.log = login;
     }
-
     public void changeAge(int age) {
         this.age = age;
     }

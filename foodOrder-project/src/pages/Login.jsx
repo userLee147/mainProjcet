@@ -9,7 +9,7 @@ import { CiUser } from "react-icons/ci";
 const Login = () => {
   const [id, setId] = useState('');
   const [pwd, setPwd] = useState('');
-  const {login} = useUserStore();
+  const {login, errors} = useUserStore();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -18,14 +18,15 @@ const Login = () => {
     if( id.trim() === '' || pwd.trim() === ''){
       return
     }
-
-    try{
-        await login(id, pwd);
-        navigate('/')
-    }catch (err){
-        alert(err.message)
+    
+    await login(id, pwd);
+  
+    if(errors != null){
+      alert(errors)
+    } else{
+  
+      navigate('/')
     }
-
   };
 
 

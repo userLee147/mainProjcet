@@ -35,7 +35,7 @@ const UserPage = () => {
         <HeaderWrap>
 
           <HeadTitle>
-          {currentUser.id} 님
+          {currentUser.userId} 님
           <NonebackgroudBtn onClick={() => navigator('/userEdit', {state: currentUser}) }>
           <IoIosArrowForward></IoIosArrowForward>
           </NonebackgroudBtn>

@@ -7,23 +7,22 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Wrap, ContentTitle } from '../styled/common';
 
-
 const schema = yup.object().shape({
   name: yup.string().required('이름을 입력하세요'),
   email: yup.string().email('유효한 이메일 형식이 아닙니다.').required('이메일을 입력하세요'),
-  id: yup.string().required('아이디를 입력하세요'),
-  pwd: yup
+  userId: yup.string().required('아이디를 입력하세요'),
+  userPwd: yup
     .string()
     .matches(/^(?=.*[a-zA-Z]).{5,}$/, '비밀번호는 영문자를 포함해 5자 이상이어야 합니다.')
     .required('비밀번호를 입력해주세요'),
-  checkPwd : yup
-  .string()
-  // yup.ref('userPw')는 다른 필드(userPw) 값을 참조
-  // 즉, userPwCheck가 userPw와 같은지 검사
-  // null은 비어있을 수도 있음을 대비한 처리
-  // oneOf([허용할 값 ~~~ ], '에러 메세지')
-  .oneOf([yup.ref('pwd'), null], '비밀번호가 일치하지 않습니다.')
-  .required('비밀번호 확인을 입력하세요.'),
+  checkPwd: yup
+    .string()
+    // yup.ref('userPw')는 다른 필드(userPw) 값을 참조
+    // 즉, userPwCheck가 userPw와 같은지 검사
+    // null은 비어있을 수도 있음을 대비한 처리
+    // oneOf([허용할 값 ~~~ ], '에러 메세지')
+    .oneOf([yup.ref('userPwd'), null], '비밀번호가 일치하지 않습니다.')
+    .required('비밀번호 확인을 입력하세요.'),
 });
 
 const UserRegistration = () => {
@@ -39,87 +38,75 @@ const UserRegistration = () => {
     clearErrors,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema), 
+    resolver: yupResolver(schema),
   });
 
-
- 
-  const navigator = useNavigate()
-
+  const navigator = useNavigate();
 
   const checkPwd = (newPwd) => {
-    if (getValues('pwd') === newPwd) {
+    if (getValues('checkPwd') === newPwd) {
       clearErrors('checkPwd');
- 
     } else {
       setError('checkPwd', { type: 'manual', message: '비밀번호가 일치하지 않습니다.' });
-
     }
   };
 
   const idCheck = async (newid) => {
     try {
-      const res = await axios.get(`http://localhost:3001/usersDB?id=${newid}`);
-      if (res.data.length > 0) {
-        setError('id', { type: 'manual', message :'이미 사용중인 아이디입니다.' })
-        
+      const res = await axios.get(`http://localhost:8888/api/members?userId=${newid}`);
+      if (res.data > 0) {
+        setError('userId', { type: 'manual', message: '이미 사용중인 아이디입니다.' });
       } else {
-        clearErrors('id');
- 
+        clearErrors('userId');
       }
     } catch (error) {
       console.log('중복확인 에러 : ', error);
     }
   };
-  
+
   // useEffect(() => {
   //   console.log("id 상태:", idValidation);
   // }, [idValidation]);
 
-
   const onSumbit = (data) => {
     // errors 객체를 찾기위해서는 아래와 같이 찾고 // errors.message가 아니라 key 값의 존재여부로 찾을 수 있음
     if (Object.keys(errors).length > 0) return; // 중복 체크 실패했으면 제출 차단
-    addUser({...data, log : false })
-    alert('회원가입성공 로그인해주세요!')
-    navigator('/')
+    addUser({ ...data, log: false });
+    alert('회원가입성공 로그인해주세요!');
+    navigator('/');
   };
 
   return (
     <Wrap>
-        <FormWrapper onSubmit={handleSubmit(onSumbit)}>
-          <ContentTitle>회원가입</ContentTitle>
-      <label>아이디</label>
-      <input type="text" {...register('id')} onBlur={(e) => idCheck(e.target.value)} />
-      {errors.id && <ErrorText>{errors.id.message}</ErrorText>}
-      
-      <label>비밀번호</label>
-      <input type="password" {...register('pwd')} />
-      {errors.pwd && <ErrorText>{errors.pwd.message}</ErrorText>}
+      <FormWrapper onSubmit={handleSubmit(onSumbit)}>
+        <ContentTitle>회원가입</ContentTitle>
+        <label>아이디</label>
+        <input type="text" {...register('userId')} onBlur={(e) => idCheck(e.target.value)} />
+        {errors.userId && <ErrorText>{errors.userId.message}</ErrorText>}
 
-      <label htmlFor="">비밀번호확인</label>
-      <input type="password" {...register('checkPwd')} onBlur={(e) => checkPwd(e.target.value)}/>
-      {errors.checkPwd && <ErrorText>{errors.checkPwd.message}</ErrorText>}
-  
+        <label>비밀번호</label>
+        <input type="password" {...register('userPwd')} />
+        {errors.userPwd && <ErrorText>{errors.userPwd.message}</ErrorText>}
 
-      <label>이름</label>
-      <input type="text" {...register('name')} />
-      {errors.name && <ErrorText>{errors.name.message}</ErrorText>}
+        <label htmlFor="">비밀번호확인</label>
+        <input type="password" {...register('checkPwd')} onBlur={(e) => checkPwd(e.target.value)} />
+        {errors.checkPwd && <ErrorText>{errors.checkPwd.message}</ErrorText>}
 
-      <label>나이</label>
-      <input type="text" {...register('age')} />
-      {errors.age && <ErrorText>{errors.age.message}</ErrorText>}
+        <label>이름</label>
+        <input type="text" {...register('name')} />
+        {errors.name && <ErrorText>{errors.name.message}</ErrorText>}
 
-      <label>이메일</label>
-      <input type="email" {...register('email')} />
-      {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+        <label>나이</label>
+        <input type="text" {...register('age')} />
+        {errors.age && <ErrorText>{errors.age.message}</ErrorText>}
 
-      <button type="submit"> 회원가입</button> 
-    </FormWrapper>
+        <label>이메일</label>
+        <input type="email" {...register('email')} />
+        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
 
-  
+        <button type="submit"> 회원가입</button>
+      </FormWrapper>
     </Wrap>
-
   );
 };
 
@@ -141,7 +128,7 @@ const FormWrapper = styled.form`
 
   button {
     padding: 10px;
-    background:  #ff5100;
+    background: #ff5100;
     color: white;
     border: none;
     border-radius: 6px;

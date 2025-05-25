@@ -4,7 +4,8 @@ spring:
 
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:tcp://localhost/C:/test/11_SpringBoot/reactbackend/tdb
+      jdbc-url: jdbc:h2:tcp://localhost/C:/workspace/KH/reactbackend/tdb
+#      jdbc-url: jdbc:h2:tcp://localhost/C:/test/11_SpringBoot/reactbackend/tdb
       driver-class-name: org.h2.Driver
       username: sa
       password:

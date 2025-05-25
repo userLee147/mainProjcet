@@ -2,43 +2,36 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { TbCurrencyRupeeNepalese } from 'react-icons/tb';
 
+const url = "http://localhost:8888/api/members"
+
 const useUserStore = create((set, get) => ({
   users: [],
   currentUser: null,
   loading: false,
-  error: null,
+  errors: null,
   
 
 
   login: async (id, pwd) => {
     
     try {
-      const response = await axios.get('http://localhost:3001/usersDB', {
-        params: { id, pwd },
+      const response = await axios.post(url,  { userId :id, userPwd : pwd, log: true 
       })
-      
-      if (response.data.length > 0 ) {
-        const user = response.data[0]
-    
-        await axios.patch(`http://localhost:3001/usersDB/${user.id}`, {
-          log: true,
-        });
-
-        set({ currentUser : { ...user, log: true }, error: null });
-       
-      }else{
-        throw new Error('아이디 또는 비밀번호가 일치하지 않습니다.')
-      }
+        const user = response.data
+        set({ currentUser : { ...user }, error: null});
+        return{currentUser : { ...user }, error: null}
+     
     } catch (error) {
-      set({ currentUser: [], error: error.message });
-      throw error;
+      const message = error.response.data.message
+      set({ currentUser: {}, errors: message});
+      return {error : message}
     }
   },
   logout : async (currentUser) => {
   
-    const id = currentUser.id
+    const id = currentUser.userId
    
-    await axios.patch(`http://localhost:3001/usersDB/${id}`,{
+    await axios.patch(url +`?userId=${id}&log=false`,{
       log : false,
     })
     set({...currentUser, log: false})
@@ -46,15 +39,15 @@ const useUserStore = create((set, get) => ({
   },
 
   addUser : async (data) => {
-  
-    await axios.post(`http://localhost:3001/usersDB/`,data)
+  console.log(data)
+    await axios.post(url+'/addUser',data)
     .then((res) =>  res )
     .catch((error) => error)
   },
 
   updateUser: async (updateUser) => {   
     
-    await axios.patch(`http://localhost:3001/usersDB/${updateUser.id}`,{...updateUser, log : false} )
+    await axios.patch(url +`/${updateUser.id}`,{...updateUser} )
     .then((res) =>  res )
     .catch((error) => error)
 
@@ -62,7 +55,7 @@ const useUserStore = create((set, get) => ({
 
   getUser : async (id) => {
     try {    
-      const res = await axios.get(`http://localhost:3001/usersDB/${id}`);
+      const res = await axios.get(url +`${id}`);
       set({currentUser : res.data})
     }catch(error){
       set({ currentUser: [], error: error.message });
@@ -71,10 +64,10 @@ const useUserStore = create((set, get) => ({
 
   removeUser: async (id) => {
     try{
-      await axios.delete(`http://localhost:3001/usersDB/${id}`)
-      set({currentUser : []})
+      await axios.delete(url+`/${id}`)
+      set({currentUser : {}})
     }catch(error){
-      set({ currentUser: [], error: error.message });
+      set({ currentUser: {}, error: error.message });
     }
       
 

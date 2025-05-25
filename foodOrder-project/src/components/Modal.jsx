@@ -27,7 +27,7 @@ const Modal = ({setIsOpen}) => {
               </ModalCloseDiv>
             <ModalContent >정말로 탈퇴하시겠습니까</ModalContent>
             <ModalBtonBox> 
-                <button onClick={() => onRemove(currentUser.id)}>예</button>
+                <button onClick={() => onRemove(currentUser.userId)}>예</button>
             </ModalBtonBox>
         </ModalLayOutBox>
     </ModalWrap>
