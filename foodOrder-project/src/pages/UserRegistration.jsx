@@ -80,16 +80,17 @@ const UserRegistration = () => {
     <Wrap>
       <FormWrapper onSubmit={handleSubmit(onSumbit)}>
         <ContentTitle>회원가입</ContentTitle>
-      <div>
-      <label>아이디</label>
-        <input type="text" {...register('userId')} onBlur={(e) => idCheck(e.target.value)} />
-        {errors.userId && <ErrorText>{errors.userId.message}</ErrorText>}
-      </div>
+        <div>
+          <label>아이디</label>
+          <input type="text" {...register('userId')} onBlur={(e) => idCheck(e.target.value)} />
+          {errors.userId && <ErrorText>{errors.userId.message}</ErrorText>}
+        </div>
 
-
-        <label>비밀번호</label>
-        <input type="password" {...register('userPwd')} />
-        {errors.userPwd && <ErrorText>{errors.userPwd.message}</ErrorText>}
+        <div>
+          <label>비밀번호</label>
+          <input type="password" {...register('userPwd')} />
+          {errors.userPwd && <ErrorText>{errors.userPwd.message}</ErrorText>}
+        </div>
 
         <label htmlFor="">비밀번호확인</label>
         <input type="password" {...register('checkPwd')} onBlur={(e) => checkPwd(e.target.value)} />
