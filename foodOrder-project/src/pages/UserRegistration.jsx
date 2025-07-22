@@ -80,9 +80,12 @@ const UserRegistration = () => {
     <Wrap>
       <FormWrapper onSubmit={handleSubmit(onSumbit)}>
         <ContentTitle>회원가입</ContentTitle>
-        <label>아이디</label>
+      <div>
+      <label>아이디</label>
         <input type="text" {...register('userId')} onBlur={(e) => idCheck(e.target.value)} />
         {errors.userId && <ErrorText>{errors.userId.message}</ErrorText>}
+      </div>
+
 
         <label>비밀번호</label>
         <input type="password" {...register('userPwd')} />
