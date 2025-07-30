@@ -28,16 +28,19 @@ export const CommonBtn = styled(Link)`
 export const CommonBtn2 = styled.button`
   padding: 10px 40px;
   margin: 5px;
-  border: 1px solid #ff5100;
+  border: 1px solid  ${({ theme }) => theme.colors.orangeMain};
   border-radius: 8px;
   background: white;
-  color: #ff5100;
+  color: ${({ theme }) => theme.colors.orangeMain};
+  
   &:hover {
     opacity: 0.9s;
     color: white;
-    background-color: #ff5100;
+    background-color:${({ theme }) => theme.colors.orangeMain};
   }
 `;
+
+
 
 export const NonebackgroudBtn = styled.button`
   background: none;
@@ -56,6 +59,7 @@ export const ContentTitle = styled.p`
   text-align: center;
   color: black;
   margin: 20px;
+  padding-top: 20px;
 `;
 
 
@@ -99,7 +103,7 @@ export const NavButton = styled.button`
  background-color: white;
   padding: 16px 0px 16px 0;
   margin: 10px;
-  backgroud : white;
+  background : white;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -1,66 +1,53 @@
-import React from 'react';
-
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoCardOutline } from 'react-icons/io5';
 import { FaRegCalendarCheck } from 'react-icons/fa6';
-import useMenuStore from '../store/MenuStore';
-import { Wrap, NonebackgroudBtn,HeaderWrap, CommonBtn,CommonBtn2 } from '../styled/common';
+import { NonebackgroudBtn, HeaderWrap, CommonBtn, CommonBtn2 } from '../../styled/common/common';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import useUserStore from '../store/UserStore';
+import { UserStoreV2 } from '../../store/UserStoreV2';
+import { userService } from '../../api/user';
 
 const UserPage = () => {
-  const location = useLocation();
-  const currentUser = location.state;
-  const navigator = useNavigate()
-  const {logout} = useUserStore();
-  
-  
+  const navigator = useNavigate();
+  const { currentUser, JWTLogout, JWTLogin } = UserStoreV2();
+
   const handleLogout = async () => {
     try {
-      await logout(currentUser);
-      navigator('/');
+      sessionStorage.removeItem('token');
+      await JWTLogout();
+      await navigator('/');
     } catch (error) {
       console.error('로그아웃 실패:', error);
     }
-  }
-
-
-
+  };
 
   return (
     <>
-      <Wrap>
+      <div>
         <HeaderWrap>
-
           <HeadTitle>
-          {currentUser.userId} 님
-          <NonebackgroudBtn onClick={() => navigator('/userEdit', {state: currentUser}) }>
-          <IoIosArrowForward></IoIosArrowForward>
-          </NonebackgroudBtn>
+            {currentUser?.userName} 님
+            <NonebackgroudBtn onClick={() => navigator('/userEdit')}>
+              <IoIosArrowForward></IoIosArrowForward>
+            </NonebackgroudBtn>
           </HeadTitle>
-          
-
-
         </HeaderWrap>
 
         {/* 주문 정보 */}
         <div>
           <OrderTable>
             <colgroup>
-            <col width={"5%"} />
-            <col width={"80%"} />
-            <col width={"10%"} />
+              <col width={'5%'} />
+              <col width={'80%'} />
+              <col width={'10%'} />
             </colgroup>
-            <thead>
-              
-            </thead>
+            <thead></thead>
             <tbody>
               <tr>
-              <th colSpan={3}>
-                <p>주문정보</p>
-              </th>
+                <th colSpan={3}>
+                  <p>주문정보</p>
+                </th>
               </tr>
 
               <tr>
@@ -69,7 +56,7 @@ const UserPage = () => {
                 </td>
                 <td>예약내역</td>
                 <td>
-                  <button onClick={()=> navigator(`/order/${currentUser.id}`,{ state: currentUser})} >
+                  <button onClick={() => navigator(`/order/${currentUser.code}`, { state: currentUser })}>
                     <IoIosArrowForward></IoIosArrowForward>
                   </button>
                 </td>
@@ -100,10 +87,10 @@ const UserPage = () => {
           </OrderTable>
         </div>
         <div>
-            <CommonBtn2 onClick={handleLogout} >로그아웃</CommonBtn2>
-            <CommonBtn to="/">홈으로</CommonBtn>
-          </div>
-      </Wrap>
+          <CommonBtn2 onClick={handleLogout}>로그아웃</CommonBtn2>
+          <CommonBtn to="/">홈으로</CommonBtn>
+        </div>
+      </div>
     </>
   );
 };
@@ -116,31 +103,27 @@ const OrderTable = styled.table`
   border-collapse: collapse;
   text-align: left;
 
-  p{
-  margin : 10px;
-  font-size: 18px;
-  font-weight: bold;
+  p {
+    margin: ${({ theme }) => theme.spacing[6]};
+    font-size: 18px;
+    font-weight: bold;
   }
 
   td {
     padding: 8px;
   }
 
-
   td:last-child {
     text-align: right;
   }
 
   button {
-  background: none;
-
+    background: none;
   }
-`
+`;
 const HeadTitle = styled.div`
   margin-left: 10px;
-  
-  
+
   font-size: 24px;
   font-weight: bold;
-  
-`
+`;

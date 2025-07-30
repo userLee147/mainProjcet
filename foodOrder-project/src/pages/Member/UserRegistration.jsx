@@ -2,10 +2,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
-import useUserStore from '../store/UserStore';
+import useUserStore from '../../store/UserStore';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Wrap, ContentTitle } from '../styled/common';
+import { ContentTitle } from '../../styled/common/common';
 
 const schema = yup.object().shape({
   name: yup.string().required('이름을 입력하세요'),
@@ -77,9 +77,9 @@ const UserRegistration = () => {
   };
 
   return (
-    <Wrap>
+    <div>
+      <ContentTitle>회원가입</ContentTitle>
       <FormWrapper onSubmit={handleSubmit(onSumbit)}>
-        <ContentTitle>회원가입</ContentTitle>
         <div>
           <label>아이디</label>
           <input type="text" {...register('userId')} onBlur={(e) => idCheck(e.target.value)} />
@@ -110,7 +110,7 @@ const UserRegistration = () => {
 
         <button type="submit"> 회원가입</button>
       </FormWrapper>
-    </Wrap>
+    </div>
   );
 };
 

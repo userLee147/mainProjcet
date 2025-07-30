@@ -13,12 +13,9 @@ import { useLocation } from 'react-router-dom';
 
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
-import'../css/stylesmenu.css';
-import { Wrap } from '../styled/common';
-
+import '../css/stylesmenu.css';
 
 export const MenuList = () => {
-
   const location = useLocation();
   const currentUser = location.state;
   const { menuList, getMenuList } = useMenuStore();
@@ -35,61 +32,52 @@ export const MenuList = () => {
   const filteredData = menuList.filter((item) => item.name.toLowerCase().includes(keyword.toLowerCase()));
 
   return (
-    <Wrap>
+    <div>
+      <Header currentUser={currentUser}></Header>
+      <MenuListContainer>
+        <p>메뉴소개 </p>
+        <SearchSection>
+          <IoSearch size={50} color="#d7dbdf"></IoSearch>
+          <SearchBox type="text" onChange={(e) => setKeyword(e.target.value)} placeholder="메뉴를 검색해보세요" />
+        </SearchSection>
+      </MenuListContainer>
 
-  <Header currentUser={currentUser}></Header>
-        <MenuListContainer>
-          <p>메뉴소개 </p>
-            <SearchSection>
-  
-            <IoSearch size={50} color="#d7dbdf"></IoSearch>
-            <SearchBox type="text" onChange={(e) => setKeyword(e.target.value)} placeholder="메뉴를 검색해보세요" />
-
-            </SearchSection>
-
-
-        </MenuListContainer>
-
-        <SwiperContainer>
-          <Swiper
-            loop={true}
-            effect={'coverflow'}
-            grabCursor={true}
-            centeredSlides={true}
-            slidesPerView={'auto'}
-            coverflowEffect={{
-              rotate: 0,
-              stretch: 0,
-              depth: 100,
-              modifier: 1,
-              slideShadows: true,
-            }}
-             //
-            pagination={true}
-            modules={[EffectCoverflow, Pagination]}
-            className="menu-swiper"
-          >
-            {filteredData.map((item) => (
-              <SwiperSlide key={item.id}>
-                <img src={item.img} alt="" />
-                <ItemDiv>
-                  <ItemText onClick={() => navigate(`/detail/${item.id}`)}> {item.name}</ItemText>
-                  <ItemText>💲{item.price.toLocaleString()}원</ItemText>
-                  <ItemTexts>{item.description}</ItemTexts>
-                </ItemDiv>
-              </SwiperSlide>
-
-            ))}
-          </Swiper>
-        </SwiperContainer>
-
-    </Wrap>
+      <SwiperContainer>
+        <Swiper
+          loop={true}
+          effect={'coverflow'}
+          grabCursor={true}
+          centeredSlides={true}
+          slidesPerView={'auto'}
+          coverflowEffect={{
+            rotate: 0,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true,
+          }}
+          //
+          pagination={true}
+          modules={[EffectCoverflow, Pagination]}
+          className="menu-swiper"
+        >
+          {filteredData.map((item) => (
+            <SwiperSlide key={item.id}>
+              <img src={item.img} alt="" />
+              <ItemDiv>
+                <ItemText onClick={() => navigate(`/detail/${item.id}`)}> {item.name}</ItemText>
+                <ItemText>💲{item.price.toLocaleString()}원</ItemText>
+                <ItemTexts>{item.description}</ItemTexts>
+              </ItemDiv>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </SwiperContainer>
+    </div>
   );
 };
 
 export default MenuList;
-
-
 
 const SwiperContainer = styled.div`
   justify-content: center;
@@ -101,9 +89,8 @@ const SwiperContainer = styled.div`
 `;
 
 const MenuListContainer = styled.div`
-  
   text-align: center;
-  margin-bottom : 20px;
+  margin-bottom: 20px;
   p {
     font-size: 24px;
     font-weight: bold;
@@ -114,19 +101,18 @@ const MenuListContainer = styled.div`
 `;
 
 const SearchSection = styled.div`
-width : calc(100% - 20px);
+  width: calc(100% - 20px);
   display: flex;
   align-items: center;
   text-align: center;
 
   padding: 0 10px;
-  margin: 20px 10px ;
+  margin: 20px 10px;
   background-color: #f1f3f5;
   border-radius: 8px;
 `;
 
 const SearchBox = styled.input`
-
   font-size: 20px;
   padding: 10px;
   margin: 10px;
@@ -139,8 +125,6 @@ const SearchBox = styled.input`
   }
 `;
 
-
-
 const ItemDiv = styled.div`
   justify-content: center;
   align-items: center;
@@ -152,7 +136,5 @@ const ItemText = styled.p`
 `;
 
 const ItemTexts = styled.p`
-padding: 0px 30px;
-
+  padding: 0px 30px;
 `;
-

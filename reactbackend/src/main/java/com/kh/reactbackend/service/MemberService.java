@@ -1,35 +1,25 @@
 package com.kh.reactbackend.service;
 
-import com.kh.reactbackend.dto.MemberDto;
+import com.kh.reactbackend.dto.MemberDto.InfoDto;
+import com.kh.reactbackend.dto.MemberDto.Response;
 import com.kh.reactbackend.entity.Member;
-
+import com.kh.reactbackend.enums.SocialType;
 import java.util.Optional;
 
 public interface MemberService {
-    MemberDto.Response getmember(Long id);
-
-    //유저의 pk가져오기
-    Long findByUserId(String userId);
-
-    // 로그인 기능(유저정보가져와서 log 정보도 바꿈)
-    MemberDto.Response loginMember(MemberDto.Update loginUser);
 
 
+    //세션로그인
+    Member findbyMember(String email, String userPwd);
 
+//    Member getmemberbySocialId(String socialId, SocialType socialType);
 
-    // log상태만 변경 결국 멤머의 객체를 가져옴
-    MemberDto.Response LogOutMember(Boolean log, String userId);
+    Member createOauth(String socialId,String name,String email, SocialType socialType);
 
-    Long registraitonMember(MemberDto.Response userDto);
+    //회원가입
+    Member addMember(Response signupDto);
 
-
-    Long checkUserId(String userId);
-
-    void deleteMember(String userId);
-
-    MemberDto.Response getMemberInfo(String userId);
-
-    MemberDto.Response updateMember(MemberDto.UpdateUserDto updateUser);
-
+    // 사용자 정보가져옥
+    Optional<InfoDto> findInfoDtoByEmail(String email);
 
 }

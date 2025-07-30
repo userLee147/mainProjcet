@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import useMenuStore from '../store/MenuStore';
 
 import { useNavigate } from 'react-router-dom';
-import { NonebackgroudBtn } from '../styled/common';
+import { NonebackgroudBtn } from '../styled/common/common';
 import { IoSearch } from 'react-icons/io5';
 
 const SearchMenu = () => {
@@ -39,13 +39,14 @@ const SearchMenu = () => {
 
       <div>
         {keyword ? (
-          filteredData.map((item) => 
+          filteredData.map((item) => (
             <ItemUl onClick={() => navigate(`/detail/${item.id}`)}>
-            <ItemLi>
-              <Img src={item.img} alt="" />
-              {item.name}
-            </ItemLi>
-          </ItemUl>)
+              <ItemLi>
+                <Img src={item.img} alt="" />
+                {item.name}
+              </ItemLi>
+            </ItemUl>
+          ))
         ) : (
           <DivSearch>
             <IoSearch size={50}></IoSearch>
@@ -106,4 +107,3 @@ const ItemLi = styled.li`
   font-size: 20px;
   margin: 10px;
 `;
-

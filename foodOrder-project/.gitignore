@@ -1,24 +1,50 @@
-# Logs
-logs
+# IDE 관련 파일
+.vscode/
+.idea/
+*.iml
+
+# 패키지 매니저 폴더
+node_modules/
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# 빌드 결과물
+build/
+dist/
+out/
+target/
+*.tsbuildinfo
+
+# 테스트 및 커버리지
+coverage/
+test-output/
+
+# 환경 변수 및 설정 파일
+.env
+.env.*
+application.yml
+application-*.yml
+application.properties
+application-*.properties
+
+# 로그 파일
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# OS 캐시 및 임시 파일
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+*.swp
+*.swo
+
+# Java / Spring 관련 파일
+.mvn/
+.gradle/
+*.class
+*.jar
+*.war
+
+# 기타 캐시
+.cache/
+.next/

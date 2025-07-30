@@ -1,6 +1,5 @@
 import React from 'react';
 import useOrderStore from '../store/OrderStore';
-import { Wrap } from '../styled/common';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { BounceLoader } from 'react-spinners';
@@ -8,8 +7,8 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../components/Header';
 
-import { NonebackgroudBtn } from '../styled/common';
-import { FaRegTrashAlt } from "react-icons/fa";
+import { NonebackgroudBtn } from '../styled/common/common';
+import { FaRegTrashAlt } from 'react-icons/fa';
 import { FaEdit } from 'react-icons/fa';
 
 const OrderList = () => {
@@ -22,13 +21,12 @@ const OrderList = () => {
     const fetchMenu = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       getOrderId(currentUser.id);
-
     };
     fetchMenu();
   }, []);
 
   return (
-    <Wrap>
+    <div>
       <Header currentUser={currentUser}></Header>
       <OrderTitle>예약목록</OrderTitle>
       {loading ? (
@@ -67,13 +65,12 @@ const OrderList = () => {
                     </td>
                     <td>{order.totalPrice.toLocaleString()}</td>
                     <td>
-                    <Btn>
-                      <FaEdit></FaEdit>
+                      <Btn>
+                        <FaEdit></FaEdit>
                       </Btn>
                       <Btn>
                         <FaRegTrashAlt color="#ff5100"></FaRegTrashAlt>
                       </Btn>
-
                     </td>
                   </OrderTr>
                 ))}
@@ -82,7 +79,7 @@ const OrderList = () => {
           )}
         </>
       )}
-    </Wrap>
+    </div>
   );
 };
 
@@ -97,12 +94,12 @@ const Wrapdiv = styled.div`
   padding: 50px;
 `;
 
-const Btn =styled.button`
-background: none;
-padding: 5px;
-`
+const Btn = styled.button`
+  background: none;
+  padding: 5px;
+`;
 export const OrderTable = styled.table`
-width: calc(100% - 20px);
+  width: calc(100% - 20px);
   font-size: 0.9em;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   border-collapse: collapse;
@@ -115,29 +112,24 @@ width: calc(100% - 20px);
 `;
 
 export const OrderThead = styled.thead`
-  background:  #ff5100;
+  background: #ff5100;
   font-weight: bold;
   color: white;
-  
 `;
 
-export const OrderTh =styled.th`
-padding: 8px;
-font-size: 16px;
-`
-
+export const OrderTh = styled.th`
+  padding: 8px;
+  font-size: 16px;
+`;
 
 export const OrderTr = styled.tr`
   &:nth-child(odd) {
     background-color: none;
   }
   &:nth-child(even) {
-   
-    background-color:#fff7eb ;
+    background-color: #fff7eb;
   }
 `;
-
-
 
 const OrderTitle = styled.p`
   font-size: 24px;

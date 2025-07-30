@@ -1,10 +1,12 @@
 package com.kh.reactbackend.dto;
 
 import com.kh.reactbackend.entity.Member;
+import com.kh.reactbackend.enums.SocialType;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import lombok.*;
 
 public class MemberDto {
@@ -15,53 +17,43 @@ public class MemberDto {
     @NoArgsConstructor
     @Setter
     public static class Response{
-        private Long code;
-        private String userId;
-        private String name;
+        private String userName;
         private String userPwd;
         private String email;
-        private int age;
-        private Boolean log;
+
 
 
         public static Response toDto(Member member){
             return Response.builder()
-                    .code(member.getCode())
-                    .userId(member.getUserId())
                     .userPwd(member.getUserPwd())
-                    .age(member.getAge())
                     .email(member.getEmail())
-                    .name(member.getName())
-                    .log(member.getLog())
+                    .userName(member.getName())
                     .build();
         }
 
         public Member toEntity() {
             return Member.builder()
-                    .userId(this.userId)
                     .userPwd(this.userPwd)
-                    .age(this.age)
-                    .checkPwd(this.userPwd)
-                    .name(this.name)
+                    .name(this.userName)
                     .email(this.email)
-                    .log(false)
                     .build();
         }
+
+
+
     }
 
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Update {
-        private String userId;
-        private Boolean log;
+    public static class LoginDto {
+        private String email;
         private String userPwd;
 
         public Member toEntity(){
             return Member.builder()
-                    .userId(this.userId)
+                    .email(this.email)
                     .userPwd(this.userPwd)
-                    .log(this.log)
                     .build();
         }
     }
@@ -70,12 +62,25 @@ public class MemberDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Setter
-    public static class UpdateUserDto {
-        private Long code;
-        private String name;
+    @Builder
+    public static class InfoDto {
+        private String userName;
         private String email;
-        private int age;
+        private SocialType socialType;
+        private LocalDateTime updatedAt;
+
+        public static InfoDto loginDto(Member member, SocialType socialType) {
+            return InfoDto.builder()
+                    .userName(member.getName())
+                    .email(member.getEmail())
+                    .socialType(socialType) // 외부에서 전달받음
+                    .updatedAt(member.getUpdatedAt())
+                    .build();
+        }
+
     }
+
+
 }
 
 

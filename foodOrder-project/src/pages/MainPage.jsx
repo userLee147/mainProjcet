@@ -6,10 +6,10 @@ import useUserStore from '../store/UserStore';
 import Header from '../components/Header';
 import SearchContent from '../components/SearchContent';
 
-import { NavDiv, NavButton, Wrap } from '../styled/common';
+import { NavDiv, NavButton, Wrap } from '../styled/common/common';
 
 //icon
-import { FaStore  } from 'react-icons/fa';
+import { FaStore } from 'react-icons/fa';
 import { PiForkKnife } from 'react-icons/pi';
 import { PiMegaphoneBold } from 'react-icons/pi';
 import { LuSandwich } from 'react-icons/lu';
@@ -36,8 +36,8 @@ const MainPage = () => {
   };
 
   return (
-    <Wrap>
-      <Header> </Header>
+    <div>
+      {/* <Header> </Header> */}
       <SearchContent> </SearchContent>
       <SwiperContainer>
         <Swiper
@@ -105,13 +105,12 @@ const MainPage = () => {
             </div>
 
             <a href="https://blog.naver.com/todaysand_/223658623296">
-            
               <IoArrowForwardCircleOutline size={50} color="black"></IoArrowForwardCircleOutline>
             </a>
           </TextOverlay>
         </CardWrapper>
       </div>
-    </Wrap>
+    </div>
   );
 };
 
@@ -123,7 +122,7 @@ const SwiperContainer = styled.div`
   align-items: center;
 `;
 
-const ContentTitle= styled.p`
+const ContentTitle = styled.p`
   font-size: 24px;
   font-weight: bold;
   text-align: left;

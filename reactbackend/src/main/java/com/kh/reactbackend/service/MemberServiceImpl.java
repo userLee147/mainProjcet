@@ -1,99 +1,113 @@
 package com.kh.reactbackend.service;
 
+;
+import com.kh.reactbackend.dto.MemberDto.InfoDto;
 
-import com.kh.reactbackend.dto.MemberDto;
+import com.kh.reactbackend.dto.MemberDto.Response;
 import com.kh.reactbackend.entity.Member;
+
+import com.kh.reactbackend.entity.SocialLogin;
+import com.kh.reactbackend.enums.SocialType;
+import com.kh.reactbackend.exception.UserAleadyExistsException;
+import com.kh.reactbackend.exception.UserNotFoundException;
+
 import com.kh.reactbackend.repository.MemberRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.NoResultException;
+
+import com.kh.reactbackend.repository.SocialLoginRepository;
+import java.util.Comparator;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class MemberServiceImpl implements MemberService{
 
-    private final MemberRepository memberRepository;
+   private final MemberRepository memberRepository;
+   private final PasswordEncoder passwordEncoder;
 
-    //유저코드로 멤버가져오기
+
+
+    //세션로그인 DB에서 유저확인
     @Override
-    public MemberDto.Response getmember(Long id) {
-        return memberRepository.findOne(id).map(MemberDto.Response::toDto)
-                .orElseThrow(()-> new EntityNotFoundException("조회된 회원이 없습니다."));
-    }
-
-    // 유저 아이디로 유저 코드 가져오기
-    @Override
-    public Long findByUserId(String userId) {
-       return memberRepository.findByUserId(userId);
-    }
-
-
-    //로그인 기능
-    @Override
-    public MemberDto.Response loginMember(MemberDto.Update loginUser) {
-        Member member = memberRepository.loginUser(loginUser.getUserId(), loginUser.getUserPwd())
-                .orElseThrow(()-> new EntityNotFoundException("조회된 회원이 없습니다."));
-
-        member.updateLogin(loginUser.getLog());
-
-        return MemberDto.Response.toDto(member);
-    }
-    //로그아웃 기능
-    @Override
-    public MemberDto.Response LogOutMember(Boolean log, String userId) {
-        //0이면 유저정보가 없는 것
-        Long userCode = memberRepository.findByUserId(userId);
-
-        Member member = memberRepository.findOne(userCode).orElseThrow(()-> new EntityNotFoundException("유저정보를 찾아오지 못했습니다."));
-
-        member.updateLogin(log);
-        return MemberDto.Response.toDto(member);
-    }
-
-    @Override
-    public Long registraitonMember(MemberDto.Response userDto) {
-        Member member = userDto.toEntity();
-        return memberRepository.save(member);
-    }
-
-    @Override
-    public Long checkUserId(String userId) {
-        return memberRepository.findByUserId(userId);
-    }
-
-    @Override
-    public void deleteMember(String userId) {
-        Member member = memberRepository.findOne(findByUserId(userId)).orElseThrow(()->new EntityNotFoundException("유저정보가 없습니다."));
-        memberRepository.deleteMember(member);
-    }
-
-    @Override
-    public MemberDto.Response getMemberInfo(String userId) {
-        Long userCode = memberRepository.findByUserId(userId);
-
-        return getmember(userCode);
-    }
-
-    @Override
-    public MemberDto.Response updateMember(MemberDto.UpdateUserDto updateUser) {
-
-        Member member = memberRepository.findOne(updateUser.getCode()).orElseThrow(()->new EntityNotFoundException("유저정보가 없습니다."));
-        if(updateUser.getEmail() != null ){
-            member.changeEmail(updateUser.getEmail());
-        }
-        if(updateUser.getName() != null){
-            member.changeName(updateUser.getName());
-        }
-        if(updateUser.getAge() != 0){
-            member.changeAge(updateUser.getAge());
+    public Member findbyMember(String email, String userPwd) {
+        Optional<Member> optMember = memberRepository.findByEmail(email);
+        if (!optMember.isPresent()) {
+            throw new UserNotFoundException("이메일이 존재하지 않습니다.");
         }
 
-        return MemberDto.Response.toDto(member);
+        Member m = optMember.get();
+        if (!passwordEncoder.matches(userPwd, m.getUserPwd())) {
+            throw new UserNotFoundException("비밀번호가 일치하지 않습니다.");
+        }
+        return m;
     }
+
+    // 소셜아이디로 회원인지 확인하기 -> 소셜아이디별 회원가입을 함(이메일이 중복가능성 있음)
+//    @Override
+//    public Member getmemberbySocialId(String socialId, SocialType socialType) {
+//        Member member = memberRepository.findBySocialIdAndSocialType(socialId, socialType).orElse(null);
+//        return member;
+//    }
+
+    // 회원가입시키기
+    public Member createOauth(String socialId,String name,String email, SocialType socialType){
+        Member member = Member.builder().
+                email(email)
+                .name(name)
+                .userPwd("")
+                .phone(null)
+                .build();
+
+        memberRepository.save(member);
+        return member;
+    }
+
+    @Override
+    public Member addMember(Response signupDto) {
+
+        //이메일 중복검사
+        if(memberRepository.existsByEmail(signupDto.getEmail())){
+            throw new UserAleadyExistsException("이미 존재하는 이메일입니다.");
+        }
+
+        //생성
+        Member member = Member.builder()
+                .email(signupDto.getEmail())
+                .name(signupDto.getUserName())
+                .userPwd(passwordEncoder.encode(signupDto.getUserPwd()))
+                .build();
+
+        memberRepository.save(member);
+        return member;
+    }
+
+
+
+    @Override
+    public Optional<InfoDto> findInfoDtoByEmail(String email) {
+
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+
+        Optional<SocialLogin> latestLogin = member.getSocialLogins()
+                .stream().max(Comparator.comparing(SocialLogin::getLoginTime));
+
+
+        SocialLogin socialLogin = latestLogin.get();
+
+        InfoDto dto = new InfoDto(
+                member.getName(),
+                member.getEmail(),
+                socialLogin.getSocialType(),
+                socialLogin.getLoginTime()
+        );
+
+        return Optional.of(dto);
+    }
+
 
 }

@@ -1,6 +1,11 @@
 package com.kh.reactbackend.entity;
 
+import com.kh.reactbackend.enums.Role;
+import com.kh.reactbackend.enums.SocialType;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +23,8 @@ public class Member {
     @Column(name= "code",  nullable = false)
     private Long code;
 
-    @Column(name= "USER_Id", length = 100,  nullable = false)
-    private String userId;
+    @Column(name ="EMAIL", nullable = false)
+    private String email;
 
     @Column(name= "NAME", length = 100,  nullable = false)
     private String name;
@@ -27,26 +32,40 @@ public class Member {
     @Column(name = "USER_PWD", length = 100,  nullable = false)
     private String userPwd;
 
-    @Column(name ="CHECK_PWD", length = 100, nullable = false)
-    private String checkPwd;
 
-    @Column(name ="EMAIL", nullable = false)
-    private String email;
+    @Column(name ="PHONE")
+    private String phone;
 
-    private int age;
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt;
 
-    private Boolean log;
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime updatedAt;
 
-    public void updateLogin(Boolean login) {
-        this.log = login;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SocialLogin> socialLogins = new ArrayList<>();
+
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Role role = Role.USER;
+
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
-    public void changeAge(int age) {
-        this.age = age;
+
+
+    public void  setUpdatedAt(){
+        this.updatedAt = LocalDateTime.now();
     }
-    public void changeName(String name){
-        this.name = name;
+
+    public void addSocialLogin(SocialLogin socialLogin) {
+        socialLogins.add(socialLogin);      // 컬렉션에 추가
+        socialLogin.setMember(this);        // 주인 쪽에도 연결
     }
-    public void changeEmail(String email){
-        this.email = email;
-    }
+
 }

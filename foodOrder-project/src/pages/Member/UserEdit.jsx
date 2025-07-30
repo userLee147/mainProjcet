@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import useUserStore from '../store/UserStore';
-import { CommonBtn2 } from '../styled/common';
+import useUserStore from '../../store/UserStore';
+import { CommonBtn2 } from '../../styled/common/common';
 import { useState } from 'react';
-import Modal from '../components/Modal';
-import CheckPwModal from '../components/CheckPwModal';
+import Modal from '../../components/Modal/Modal';
+import CheckPwModal from '../../components/Modal/CheckPwModal';
 
 // yup 스키마
 const schema = yup.object().shape({
@@ -26,8 +26,8 @@ const UserEdit = () => {
   const { currentUser, updateUser } = useUserStore();
   const [isEditing, setIsEditing] = useState(false); // 수정 상태 추가
   const [isOnpen, setIsOpen] = useState(false);
-  const [isCheckOpen, setIsCheckOpen] =useState(false);
-  
+  const [isCheckOpen, setIsCheckOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -43,9 +43,8 @@ const UserEdit = () => {
     if (!currentUser) {
       alert('로그인이 필요한 서비스입니다.');
       navigate('/');
-
     } else {
-      // 기본값 세팅 
+      // 기본값 세팅
       setValue('name', currentUser.name || '');
       setValue('age', currentUser.age || '');
       setValue('email', currentUser.email || '');
@@ -56,32 +55,28 @@ const UserEdit = () => {
   const onSubmit = async (data) => {
     try {
       await updateUser({ ...currentUser, ...data });
-        alert('정보가 수정되었습니다.')
-        setIsEditing(!isEditing)
-
+      alert('정보가 수정되었습니다.');
+      setIsEditing(!isEditing);
     } catch (error) {
       alert('정보 수정 중 오류가 발생했습니다.');
       console.error('업데이트 실패:', error);
     }
   };
 
-
-
-  const cancelEdit = () =>{
+  const cancelEdit = () => {
     setValue('name', currentUser.name || '');
     setValue('age', currentUser.age || '');
     setValue('email', currentUser.email || '');
     setValue('userPwd', currentUser.userPwd || '');
     // reset({
     //   name: currentUser.name ||'',
-    //   age :currentUser.age||'', 
+    //   age :currentUser.age||'',
     //   email : currentUser.email||'',
-    //   userPwd : currentUser.userPwd||'' 
+    //   userPwd : currentUser.userPwd||''
     // })
     // restet 이 맨처음 값으로 가져와서 사용  x
-    setIsEditing(false)
-  }
-
+    setIsEditing(false);
+  };
 
   return (
     <>
@@ -89,11 +84,11 @@ const UserEdit = () => {
         <h2>개인정보 수정</h2>
 
         <label>이름</label>
-        <input type="text" {...register('name')} readOnly={!isEditing}/>
+        <input type="text" {...register('name')} readOnly={!isEditing} />
         {errors.name && <ErrorText>{errors.name.message}</ErrorText>}
 
         <label>나이</label>
-        <input type="number" {...register('age')} readOnly={!isEditing}/>
+        <input type="number" {...register('age')} readOnly={!isEditing} />
         {errors.age && <ErrorText>{errors.age.message}</ErrorText>}
 
         <label>이메일</label>
@@ -101,18 +96,17 @@ const UserEdit = () => {
         {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
 
         <label>비밀번호</label>
-        <input type="password" {...register('userPwd')} readOnly/>
+        <input type="password" {...register('userPwd')} readOnly />
         {errors.userPwd && <ErrorText>{errors.userPwd.message}</ErrorText>}
-        
-        <button type='button' onClick={() => setIsCheckOpen(true)}>비밀번호 수정하기</button>
 
+        <button type="button" onClick={() => setIsCheckOpen(true)}>
+          비밀번호 수정하기
+        </button>
 
         <div>
           {isEditing ? (
             <>
-              <button type="submit">
-                수정 완료
-              </button>
+              <button type="submit">수정 완료</button>
               <button type="button" onClick={cancelEdit}>
                 수정 취소
               </button>
@@ -122,16 +116,13 @@ const UserEdit = () => {
               수정하기
             </button>
           )}
-          <CommonBtn2 type='button' onClick={() => setIsOpen(true)}>회원탈퇴</CommonBtn2>
+          <CommonBtn2 type="button" onClick={() => setIsOpen(true)}>
+            회원탈퇴
+          </CommonBtn2>
         </div>
       </FormWrapper>
-      {
-        isOnpen &&<Modal setIsOpen={setIsOpen}></Modal> 
-      }
-              {
-          isCheckOpen&&<CheckPwModal setIsCheckOpen={setIsCheckOpen} ></CheckPwModal>
-        }
-        
+      {isOnpen && <Modal setIsOpen={setIsOpen}></Modal>}
+      {isCheckOpen && <CheckPwModal setIsCheckOpen={setIsCheckOpen}></CheckPwModal>}
     </>
   );
 };
@@ -152,7 +143,7 @@ const FormWrapper = styled.form`
     border-radius: 4px;
   }
 
-  input:read-only{
+  input:read-only {
     background-color: #e9e9e9;
   }
 
