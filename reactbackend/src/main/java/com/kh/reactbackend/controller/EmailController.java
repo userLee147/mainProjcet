@@ -39,6 +39,8 @@ public class EmailController {
         return ResponseEntity.ok(res);
     }
 
+
+
 //    @PostMapping(value = "/send", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    public ResponseEntity<String> sendEmail(@RequestPart("email") MailDto.RequestDto requestDto,
 //                                      @RequestParam("email") String email,

@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 "/v2/member/jwtLogin",
                                 "/v2/member/logout",
                                 "/v2/member/signup",
+                                "/v2/member/checkEmail",
                                 "/v2/member/kakao/login",
                                 "/email/*",
                                 "/connect/**"

@@ -3,9 +3,11 @@ package com.kh.reactbackend.controller;
 import com.kh.reactbackend.dto.AccessTokenDto;
 import com.kh.reactbackend.dto.KakaoProfileDto;
 import com.kh.reactbackend.dto.MemberDto;
+import com.kh.reactbackend.dto.MemberDto.InfoDto;
 import com.kh.reactbackend.dto.RedirectDto;
 import com.kh.reactbackend.entity.Member;
 import com.kh.reactbackend.enums.SocialType;
+import com.kh.reactbackend.exception.UserNotFoundException;
 import com.kh.reactbackend.oauth.JwtTokenProvider;
 import com.kh.reactbackend.service.KakaoService;
 import com.kh.reactbackend.service.MemberService;
@@ -78,6 +80,7 @@ public class MemberController {
 
         Member member = memberService.findbyMember(loginDto.getEmail(), loginDto.getUserPwd());
 
+
         String jwtToken = jwtTokenProvider.createToken(member.getEmail(), member.getRole().toString());
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("token",jwtToken);
@@ -87,12 +90,20 @@ public class MemberController {
     //회원정보 가져오기
     @GetMapping("/me")
     public ResponseEntity<?> getMemberInfo(){
+
         String email = jwtTokenProvider.getUserIdFromToken();
 
-        // 이메일 중복검사가 필요함
+        System.out.println("test" + email);
+
         Optional <MemberDto.InfoDto> member = memberService.findInfoDtoByEmail(email);
 
         return ResponseEntity.ok(member);
+    }
+
+    @PostMapping("checkEmail")
+    public  ResponseEntity<Boolean> checkEmail(@RequestBody MemberDto.CheckEmailDto request){
+      boolean res = memberService.findByCheckEmail(request.getEmail());
+        return ResponseEntity.ok(res);
     }
 
 

@@ -22,7 +22,6 @@ public class MemberDto {
         private String email;
 
 
-
         public static Response toDto(Member member){
             return Response.builder()
                     .userPwd(member.getUserPwd())
@@ -30,16 +29,6 @@ public class MemberDto {
                     .userName(member.getName())
                     .build();
         }
-
-        public Member toEntity() {
-            return Member.builder()
-                    .userPwd(this.userPwd)
-                    .name(this.userName)
-                    .email(this.email)
-                    .build();
-        }
-
-
 
     }
 
@@ -50,12 +39,6 @@ public class MemberDto {
         private String email;
         private String userPwd;
 
-        public Member toEntity(){
-            return Member.builder()
-                    .email(this.email)
-                    .userPwd(this.userPwd)
-                    .build();
-        }
     }
 
     @Getter
@@ -79,6 +62,15 @@ public class MemberDto {
         }
 
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CheckEmailDto {
+        private String email;
+    }
+
+
 
 
 }

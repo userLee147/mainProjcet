@@ -2,8 +2,6 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import useUserStore from '../store/UserStore';
-import Header from '../components/Header';
 import SearchContent from '../components/SearchContent';
 
 import { NavDiv, NavButton, Wrap } from '../styled/common/common';
@@ -21,15 +19,15 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import '../css/styles.css';
+import { UserStoreV2 } from '../store/UserStoreV2';
 
 const MainPage = () => {
-  const { currentUser } = useUserStore();
+  const { currentUser } = UserStoreV2();
   const navigator = useNavigate();
 
   const checkUser = () => {
-    const someData = currentUser;
-    if (currentUser?.id) {
-      navigator('/order', { state: someData });
+    if (currentUser) {
+      navigator('/order');
     } else {
       alert('로그인 후 이용가능합니다.');
     }

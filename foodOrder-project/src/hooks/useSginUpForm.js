@@ -71,6 +71,13 @@ export const useSignupForm = () => {
         return;
       }
 
+      const checkEmail = await userService.checkEmail(emaildata);
+
+      if(checkEmail){
+        alert("이미 가입한 이메일입니다.")
+        return;
+      }
+
       await emailService.sendEmailCode(emaildata);
       alert('인증코드가 발송되었습니다.');
       setEmailAuthStarted(true);
@@ -85,6 +92,9 @@ export const useSignupForm = () => {
    if(res){
     setEmailVerified(true);
     alert('이메일 인증 완료');
+   }else{
+    setEmailVerified(res);
+    alert('이메일 인증번호를 확인해주세요');
    }
     
   };

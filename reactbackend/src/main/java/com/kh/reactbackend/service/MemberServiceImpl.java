@@ -14,6 +14,7 @@ import com.kh.reactbackend.exception.UserNotFoundException;
 import com.kh.reactbackend.repository.MemberRepository;
 
 import com.kh.reactbackend.repository.SocialLoginRepository;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -96,18 +97,28 @@ public class MemberServiceImpl implements MemberService{
         Optional<SocialLogin> latestLogin = member.getSocialLogins()
                 .stream().max(Comparator.comparing(SocialLogin::getLoginTime));
 
+        InfoDto.InfoDtoBuilder builder = InfoDto.builder()
+                 .email(member.getEmail())
+                 .userName(member.getName())
+                 .updatedAt(LocalDateTime.now());
 
-        SocialLogin socialLogin = latestLogin.get();
+        //소셜타입이 존재한다면 빌더로 넣어줘
+        latestLogin.map(SocialLogin::getSocialType).ifPresent(builder::socialType);
 
-        InfoDto dto = new InfoDto(
-                member.getName(),
-                member.getEmail(),
-                socialLogin.getSocialType(),
-                socialLogin.getLoginTime()
-        );
-
+        InfoDto dto = builder.build();
         return Optional.of(dto);
     }
 
+    @Override
+    public Boolean findByCheckEmail(String email) {
+// 1. 이메일을 확인한다 -> 이메일이 있으면  true / 이메일이 없으면  false로 넘긴다
+
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if (!member.isPresent()) {
+            return false;
+        }
+        return true;
+
+    }
 
 }

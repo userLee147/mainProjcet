@@ -36,7 +36,7 @@ function App() {
 
 
               <Route path="/search" element={<SearchMenu />}></Route>
-              <Route path="/detail/:id" element={<DetailMenu />}></Route>
+              <Route path="/detail" element={<DetailMenu />}></Route>
               <Route path="/menu" element={<MenuList />} />
               <Route path="/order" element={<MenuOrder />} />
               {/* <Route path="/order/:id" element={<OrderList />} /> */}

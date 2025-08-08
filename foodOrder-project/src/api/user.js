@@ -28,30 +28,49 @@ export const userService = {
   },
   //이메일 로그인
   login: async (userData) => {
+  
     try {
       //백엔드 서버용
       const { data } = await api.post(API_ENDPOINTS.MEMBER.Login, userData);
+
 
       // 토큰 저장
       if (data.token) {
         sessionStorage.setItem('token', data.token);
       }
+
+     
     } catch (error) {
       console.log('에러 응답객체 :', error.response.data);
-      throw error;
+      throw error
     }
   },
 
   //  내 정보 조회 (JWT 토큰 사용)
   getMyInfo: async () => {
+
     try {
       const { data } = await api.get(API_ENDPOINTS.MEMBER.ME);
+
+      console.log(data);
+
       return data;
     } catch (error) {
-      console.error('내 정보 조회 실패 : ', error);
+      console.error('내 정보 조회 실패 : ', error.response.data);
       throw error;
     }
   },
+
+ checkEmail : async (email) => {
+  try{
+    const { data } = await api.post(API_ENDPOINTS.MEMBER.CHECKEMAIL, {email} )
+  return data;
+  }catch(error){
+    console.error("email 가입여부 조회 실패 :", error);
+    throw error;
+  }
+  
+ },
 
 
 

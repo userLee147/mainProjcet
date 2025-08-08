@@ -12,10 +12,8 @@ const SignUp = () => {
   const {
     register,
     onSubmit,
-    watch,
     errors,
     emailVerified,
-    setEmailVerified,
     emailAuthStarted,
     setEmailAuthStarted,
     handleSubmit,
@@ -58,7 +56,7 @@ const SignUp = () => {
 
             <LoginContetDiv>
               <label htmlFor="email">이메일</label>
-              <ButtonWrap emailAuthStarted ={emailAuthStarted}>
+              <ButtonWrap $emailAuthStarted ={emailAuthStarted}>
                 <input
                   type="text"
                   id="email"
@@ -98,7 +96,7 @@ const SignUp = () => {
             {errors.email && errors.email.message}
 
             <LoginContetDiv>
-              <label htmlFor="pwd">비밀번호</label>
+              <label htmlFor="userPwd">비밀번호</label>
               <input type="password" id="userPwd" placeholder="영문자 조합 5자리 이상" {...register('userPwd')} />
             </LoginContetDiv>
             {errors.userPwd && errors.userPwd.message}
@@ -198,7 +196,7 @@ const ButtonWrap = styled.div`
   flex-wrap: nowrap;
   gap: 2%;
   input {
-    width: ${({emailAuthStarted}) => emailAuthStarted ? '100%': '60%' };
+    width: ${({$emailAuthStarted}) => $emailAuthStarted ? '100%': '60%' };
   }
 
   button {

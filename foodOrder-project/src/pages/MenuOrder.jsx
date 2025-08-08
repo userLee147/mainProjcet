@@ -1,15 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FormTable, OrderTable, TableTd, TableTitle, CardContainer } from '../styled/MenuOrder';
 import useOrderStore from '../store/OrderStore';
-import { useLocation } from 'react-router-dom';
-
-
+import { UserStoreV2 } from '../store/UserStoreV2';
+import DaumPostcodeEmbed from 'react-daum-postcode';
+import Post from '../components/Post';
+import styled from 'styled-components';
 // 유효성 검사 스키마
 const schema = yup.object().shape({
   name: yup.string().required('이름은 필수입니다.'),
@@ -24,25 +24,28 @@ const schema = yup.object().shape({
 });
 
 const MenuOrder = () => {
-  const location = useLocation();
-  const currentUser = location.state;
+  const currentUser = UserStoreV2();
 
   const navigate = useNavigate();
-  const { addOrder  } = useOrderStore();
-   const [checkedItems, setCheckedItems] = useState({
+  const { addOrder } = useOrderStore();
+  const [checkedItems, setCheckedItems] = useState({
     sandwich: false,
     drink: false,
     option: false,
     quantity: 20,
   });
 
-
-
   const [selectedSandwich, setSelectedSandwich] = useState('햄치즈에그');
   const [selectedDrink, setSelectedDrink] = useState('1000');
   const [selectedOption, setSelectedOption] = useState('0');
   const [quantity, setQuantity] = useState(20);
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const [fullAddress, setFullAddress] = useState({
+    zonecode: '',
+    mainaddress: '',
+    detailaddress: '',
+  });
 
   const sandwichPrices = {
     햄치즈에그: 3500,
@@ -61,9 +64,11 @@ const MenuOrder = () => {
     resolver: yupResolver(schema),
   });
 
+  console.log(errors);
+
   useEffect(() => {
     if (currentUser) {
-      setValue('name', currentUser.name || '');
+      setValue('name', currentUser.userName || '');
       setValue('email', currentUser.email || '');
     }
   }, [currentUser]);
@@ -81,25 +86,30 @@ const MenuOrder = () => {
     setCheckedItems((prev) => ({ ...prev, [name]: checked }));
   };
 
+  const handleAddressChange = (value) => {
+    setFullAddress((prev) => ({
+      ...prev,
+      detailaddress: value,
+    }));
+
+    console.log(fullAddress);
+  };
+
   const onSubmit = (data) => {
+    setValue('address', fullAddress.zonecode + '/' + fullAddress.mainaddress + '/' + fullAddress.detailaddress);
     const finalData = {
-...data,      
+      ...data,
       sandwich: checkedItems.sandwich ? selectedSandwich : null,
       drink: checkedItems.drink ? selectedDrink : null,
       option: checkedItems.option ? selectedOption : null,
       totalPrice,
-
-      
-
     };
-
-    addOrder(finalData)
+    addOrder(finalData);
 
     alert('신청접수가 완료되었습니다.');
     console.log('전송 데이터:', finalData);
     navigate('/');
   };
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -114,7 +124,7 @@ const MenuOrder = () => {
               <th>이름</th>
 
               <td>
-                <input type='hidden'{...register('user')} value={currentUser.id}></input>
+                <input type="hidden" {...register('user')} value={currentUser.code}></input>
                 <input type="text" {...register('name')} />
                 {errors.name && <p>{errors.name.message}</p>}
               </td>
@@ -146,8 +156,15 @@ const MenuOrder = () => {
             <tr>
               <th rowSpan={3}>메뉴선택</th>
               <td>
-                <input type="checkbox" {...register('sandwich')} 
-                checked={checkedItems.sandwich} onChange={ (e) => {handleCheckChange(e); setValue('sandwich',e.target.checked)}} />
+                <input
+                  type="checkbox"
+                  {...register('sandwich')}
+                  checked={checkedItems.sandwich}
+                  onChange={(e) => {
+                    handleCheckChange(e);
+                    setValue('sandwich', e.target.checked);
+                  }}
+                />
                 샌드위치
               </td>
               <td>
@@ -178,12 +195,7 @@ const MenuOrder = () => {
 
               <td>
                 {checkedItems.drink && (
-                  <select
-                    value={selectedDrink}
-                    onChange={(e) => 
-                      setSelectedDrink(e.target.value)
-                      }
-                  >
+                  <select value={selectedDrink} onChange={(e) => setSelectedDrink(e.target.value)}>
                     <option value="1000">팩음료 (1,000원)</option>
                     <option value="1500">병음료 (1,500원)</option>
                   </select>
@@ -198,13 +210,7 @@ const MenuOrder = () => {
 
               <td>
                 {checkedItems.option && (
-                  <select
-                    value={selectedOption}
-                    onChange={(e) => 
-                      setSelectedOption(e.target.value)
-                     
-                    }
-                  >
+                  <select value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
                     <option value="1500">쿠키 (1,500원)</option>
                     <option value="2000">치킨너겟 (2,000원)</option>
                     <option value="3000">과일 (3,000원)</option>
@@ -251,8 +257,18 @@ const MenuOrder = () => {
             <tr>
               <th>배송 주소</th>
               <td>
-                {' '}
-                <input type="text" placeholder="상세주소" {...register('address')} />
+                <Div>
+                  <input disabled value={fullAddress.zonecode}></input>
+                  <Post setValue={setValue} setFullAddress={setFullAddress}></Post>
+                </Div>
+
+                <input type="text" value={fullAddress.mainaddress} disabled />
+                <input
+                  placeholder="상세주소를 입력해주세요"
+                  type="text"
+                  value={fullAddress.detailaddress}
+                  onChange={(e) => handleAddressChange(e.target.value)}
+                />
               </td>
             </tr>
           </tbody>
@@ -265,3 +281,14 @@ const MenuOrder = () => {
 };
 
 export default MenuOrder;
+
+const Div = styled.div`
+  display: flex;
+
+  input {
+    width: 60%;
+  }
+  button {
+    width: 30%;
+  }
+`;

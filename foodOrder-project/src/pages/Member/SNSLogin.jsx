@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import useUserStore from '../../store/UserStore';
 import { CommonBtn, ContentTitle, NonebackgroudBtn } from '../../styled/common/common';
-
-import styled from 'styled-components';
+import Tooltip from '@mui/material/Tooltip';
+import styled, { css } from 'styled-components';
 import { FiX, FiVoicemail, FiMail } from 'react-icons/fi';
 
 import { useNavigate } from 'react-router-dom';
@@ -55,7 +55,7 @@ const SNSLogin = () => {
       <ModalWrap>
         <ContentWrap>
           <ModalCloseDiv>
-            <CloseBtnV2 onClick={() =>navigate("/")}>
+            <CloseBtnV2 onClick={() => navigate('/')}>
               <FiX color="#828282" />
             </CloseBtnV2>
           </ModalCloseDiv>
@@ -64,34 +64,36 @@ const SNSLogin = () => {
             <p> 오늘샌드에 오신 것을 환영합니다.</p>
           </HeaderSection>
 
-          <FormWrapper>
-            <button alt="Naver Login" onClick={handleNaverLogin}>
+          <FormWrapper  socialType={localStorage.getItem('socialType')}>
+            <button alt="Naver Login" data-type="NAVER"  onClick={handleNaverLogin}>
               <ImgBtnWrap>
                 <div>
                   <img
-                    src="/src/assets/naver_log(green).png
-                "
+                  src={localStorage.getItem('socialType') ==='Naver'?"/src/assets/naver_log(white).png": "/src/assets/naver_log(green).png" }
+                  
                     alt="naverlogo"
                   />
                 </div>
-
                 <p>네이버로 로그인</p>
               </ImgBtnWrap>
+              {localStorage.getItem('socialType') ==='Naver'&&"(최근 이용)"}
+                  
             </button>
 
-            <button alt="Google Login" onClick={handleGoogleLogin}>
+            <button alt="Google Login" data-type="GOOGLE" onClick={handleGoogleLogin}>
               <ImgBtnWrap>
                 <div>
                   <img src="/src/assets/google_logo.png" alt="googlelogo" />
                 </div>
                 <p>구글로 로그인</p>
               </ImgBtnWrap>
+              {localStorage.getItem('socialType') ==='GOOGLE'&&"(최근 이용)"}
             </button>
 
             <button type="submit" onClick={() => navigate('/login')}>
               <ImgBtnWrap>
                 <div>
-                  <FiMail color='#4F4F4F' size={'18px'}></FiMail>
+                  <FiMail color="#4F4F4F" size={'18px'}></FiMail>
                 </div>
                 <p> 이메일로 로그인</p>
               </ImgBtnWrap>
@@ -109,15 +111,13 @@ const SNSLogin = () => {
               <SnsIconBtn src="/src/assets/kakao(wavve_com).png" alt="" />
             </button>
           </div>
-          
+
           <InfoWrap>
             <InfoContent>
-            <p>아직 회원이 아니신가요? </p>
-            <a href="">회원가입</a>
+              <p>아직 회원이 아니신가요? </p>
+              <a href="/signup">회원가입</a>
             </InfoContent>
           </InfoWrap>
-          
-
         </ContentWrap>
       </ModalWrap>
     </div>
@@ -147,7 +147,7 @@ const HeaderSection = styled.div`
   margin: 15px 0 20px 0;
 
   font-size: ${({ theme }) => theme.fontSizes.lg};
-  color : ${({ theme }) => theme.colors.gray[1]};
+  color: ${({ theme }) => theme.colors.gray[1]};
 `;
 
 const FormWrapper = styled.div`
@@ -156,30 +156,42 @@ const FormWrapper = styled.div`
   gap: ${({ theme }) => theme.spacing[4]};
   margin: 20px ${({ theme }) => theme.spacing[6]};
 
-
-
   button {
     display: flex;
     justify-content: left;
 
     font-size: ${({ theme }) => theme.fontSizes.sm};
-    color : ${({ theme }) => theme.colors.gray[2]};
-
+    color: ${({ theme }) => theme.colors.gray[2]};
 
     padding: ${({ theme }) => theme.spacing[3]} ${({ theme }) => theme.spacing[6]};
     border: 1px solid ${({ theme }) => theme.colors.gray[5]};
     border-radius: ${({ theme }) => theme.borderRadius.md};
-    box-shadow:  ${({ theme }) => theme.shadows.sm};
-    ;
+    box-shadow: ${({ theme }) => theme.shadows.sm};
     cursor: pointer;
   }
+  ${({ socialType, theme }) =>
+      socialType === 'NAVER' &&
+    css`
+    button[data-type='NAVER'] {
+    background-color: #03c75a;
+    color: white;
+
+ ` }
+ ${({ socialType, theme }) =>
+ socialType === 'GOOGLE' &&
+    css`
+    button[data-type='GOOGLE'] {
+    background-color: ${({theme}) => theme.colors.gray[4]};
+    color: white;
+ ` }
+
 `;
 
 const ImgBtnWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 80px;
+  gap: 70px;
 
   div {
     padding-top: 2px;
@@ -196,16 +208,14 @@ const ImgBtnWrap = styled.div`
 const SnsIconBtn = styled.img`
   width: 50px;
   height: 50px;
-
 `;
 
 const LineWrap = styled.div`
-
   display: flex;
   align-items: center;
-  margin: 0 ${({ theme }) => theme.spacing[6]} ;
+  margin: 0 ${({ theme }) => theme.spacing[6]};
   margin-bottom: ${({ theme }) => theme.spacing[3]};
-  
+
   hr {
     flex: 1;
     border: none;
@@ -216,7 +226,7 @@ const LineWrap = styled.div`
     margin: 0 10px;
     color: ${({ theme }) => theme.colors.gray[2]};
     font-size: ${({ theme }) => theme.fontSizes.sm};
-  
+
     white-space: nowrap;
   }
 `;

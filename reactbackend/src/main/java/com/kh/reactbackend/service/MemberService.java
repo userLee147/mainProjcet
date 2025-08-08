@@ -22,4 +22,5 @@ public interface MemberService {
     // 사용자 정보가져옥
     Optional<InfoDto> findInfoDtoByEmail(String email);
 
+    Boolean findByCheckEmail(String email);
 }

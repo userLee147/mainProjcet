@@ -11,8 +11,6 @@ export const emailService = {
 
   verifyEmailCode: async (email, code) => {
     const { data } = await api.post(API_ENDPOINTS.EMAIL.VERIFY, { email, code });
-
-    console.log(data);
     return data
   },
 }

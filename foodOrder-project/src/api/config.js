@@ -20,6 +20,7 @@ export const API_ENDPOINTS = {
     SNSLOGIN :'/v2/member/kakao/login',
     SIGNUP :'/v2/member/signup',
     ME:'/v2/member/me',
+    CHECKEMAIL:'/v2/member/checkEmail',
   },
 
   EMAIL :{

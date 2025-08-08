@@ -19,16 +19,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+  
     if (!email || !userPwd) {
       setInputError(true);
       return;
     }
 
     setInputError(false);
+
     const userData = {
       email: email,
       userPwd: userPwd,
     };
+    
+ 
 
     try {
       await userService.login(userData);
@@ -40,13 +44,14 @@ const Login = () => {
       
       navigate('/')
 
-
-
-    } catch (error) {
-      console.log(error);
+    } catch ({response}) {
+      console.log("test", response?.data)
+      alert(response?.data.message)
     }
-  };
 
+  
+  };
+  
   return (
     <div>
       <ModalWrap>
@@ -65,7 +70,7 @@ const Login = () => {
             <p> 이메일로 로그인</p>
           </HeaderSection>
 
-          <FormWrapper onSubmit={handleSubmit}>
+          <LoginWrapper>
             <LoginContetDiv>
               <label htmlFor="email">이메일</label>
               <input
@@ -90,7 +95,7 @@ const Login = () => {
             </LoginContetDiv>
             {inputError === true && !userPwd && <p>비밀번호를 입력해주세요</p>}
 
-            <RegisterBtn type="submit">로그인하기</RegisterBtn>
+            <RegisterBtn onClick={(e) => handleSubmit(e)}>로그인하기</RegisterBtn>
 
             <InfoWrap>
               <InfoContent>
@@ -103,7 +108,7 @@ const Login = () => {
                 <a href="/signup">회원가입</a>
               </InfoContent>
             </InfoWrap>
-          </FormWrapper>
+          </LoginWrapper>
         </ContentWrap>
       </ModalWrap>
     </div>
@@ -130,7 +135,7 @@ const HeaderSection = styled.div`
   align-items: center;
 `;
 
-const FormWrapper = styled.form`
+const LoginWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[4]};
